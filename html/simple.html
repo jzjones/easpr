@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+<script src="http://simplewebrtc.com/latest.js"></script>
+<script>
+	var webrtc = new SimpleWebRTC({
+		// the id/element dom element that will hold "our" video
+		localVideoEl : 'localVideo',
+		// the id/element dom element that will hold remote videos
+		remoteVideosEl : 'remotesVideos',
+		// immediately ask for camera access
+		autoRequestMedia : true
+	});
+	
+	$('#joinBtn').click(function(){
+		console.log("Click!");
+		if ($('#roomName').val() != "") {
+			var roomName = $('#roomName').val();
+			webrtc.joinRoom(roomName);
+
+		} else {
+			alert("Room name can't be empty");
+		}
+	});
+
+	// we have to wait until it's ready
+	webrtc.on('readyToCall', function() {
+		webrtc.joinRoom('Default Room');
+		
+	});
+	
+	
+</script>
+</head>
+<body>
+	<div id="roomNav">
+		<input id = "roomName" type="text" name="roomName">
+		<button id = 'joinBtn' type="button">Join Room</button>
+	</div>
+	<video height="300" id="localVideo"></video>
+	<div id="remotesVideos"></div>
+</body>
+</html>
