@@ -28,15 +28,17 @@
 				
 				//clear current videos
 				$('#remotesVideos').empty();
+				
 				//console.log("got there");
 				var roomName = $('#roomName').val();
+				
+				$('#roomName').val("");
 				
 				webrtc.joinRoom(roomName);
 
 			} else {
 				
 				alert("Room name can't be empty");
-				
 			}
 		});
 
