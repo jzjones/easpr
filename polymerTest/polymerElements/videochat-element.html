@@ -1,10 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <script src="../jquery_webrtc/jq.js"></script>
-<script src="../jquery_webrtc/simplewebrtc.js"></script>
-<link href="../../easpr/bootstrap.min.css" rel="stylesheet">
-<link href="../../easpr/demo.css" rel="stylesheet">
-<script src="../../easpr/bootstrap.min.js"></script>
-<polymer-element name="easpr-element">
+<script src="../jquery_webrtc/rtc.js"></script>
+<link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../css/demo.css" rel="stylesheet">
+<script src="../../bootstrap/js/bootstrap.min.js"></script>
+<polymer-element name="videochat-element" attributes="name sessionName">
   <template>
   
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -24,6 +24,7 @@
             		<div class="form-group" id="roomNav">
               			<input type="text" placeholder="Room name" id="roomName" name="roomName" class="form-control">
             		</div>
+            		<button type="button" id="createBtn" class="btn btn-success" on-click="{{createRoom}}">Create Room</button>
             		<button type="button" id="joinBtn" class="btn btn-success" on-click="{{joinRoom}}">Join Room</button>
             		<div class="form-group">
               			<span id="roomSpan">RoomName</span>
@@ -33,40 +34,86 @@
       	</div>
     </div>
     
-	<div id="remotesVideos"></div>
-	<video height="500" id="localVideo"></video>
+	<div id="videoStream"></div>
   </template>
 
   <script>
-  Polymer('easpr-element',{
+  Polymer('videochat-element',{
+	  
+	  
 
-  	ready:function(){
-  		this.webrtc=new WebRTC({
+  	ready: function(){
+  		
+  		this.connection = new RTCMultiConnection();
+  		this.connection.joined = false;
+  		this.connection.session = {
+  			audio: true,
+  			video: true
+  		}
+  		this.connection.onclose = function(e){
+  			this.joined = false;	
+  		
+  		}
+  		this.connection.onstream = function(e){
+  			
+  			console.log("Adding video stream");
+  			$('#videoStream').append(e.mediaElement);
+  			
+  		}
+  		console.log("test");
+  		console.log(this.connection.channel);
+  	},
+  		
+//   		function(){
+//   		this.webrtc=new WebRTC({
 	
-			// the id/element dom element that will hold "our" video
-			localVideoEl : 'localVideo',
-			// the id/element dom element that will hold remote videos
-			remoteVideosEl : 'remotesVideos',
-			// immediately ask for camera access
-			autoRequestMedia : true
-			});
+// 			// the id/element dom element that will hold "our" video
+// 			localVideoEl : 'localVideo',
+// 			// the id/element dom element that will hold remote videos
+// 			remoteVideosEl : 'remotesVideos',
+// 			// immediately ask for camera access
+// 			autoRequestMedia : true
+// 			});
+  	
+  	createRoom:function(){
+		if(this.connection.joined){
+			this.connection.joined = false;
+			this.connection.leave(); 
+  			$('#videoStream').empty();
+
+		}
+		this.connection.joined = true;
+		this.connection.open($('#roomName').val());
+		$('#roomName').val("");
+		this.connection.connect(this.connection.channel);
+		this.connection.join({
+  		    sessionid: this.connection.channel,
+  		    userid: 'initiator-id',
+  		    session: {audio:true,video:true},
+  		    extra: {}
+  		});
+		console.log(this.connection.channel);
+
+  		
   	},
 
   	joinRoom:function(){
-  		console.log("Click!");
-			if ($('#roomName').val() != "") {
-				 //console.log("got there");
-				$('#remotesVideos').empty();
+  		if(this.connection.joined){
+			this.conection.joined = false;
+  			this.connection.leave();
+  			$('#videoStream').empty();
+		
+		}
+  		this.connection.joined = true;
+  		this.connection.connect($('#roomName').val());
+  		this.connection.join({
+  		    sessionid: this.connection.channel,
+  		    userid: 'initiator-id',
+  		    session: {audio:true,video:true},
+  		    extra: {}
+  		});
+		console.log(this.connection.channel);
 
-				var roomName = $('#roomName').val();
-				$('#roomName').val("");
-
-				$('#roomSpan').html(roomName);
-				this.webrtc.joinRoom(roomName);
-
-			} else {
-				alert("Room name can't be empty");
-			} 
   	}
   });
   </script>
