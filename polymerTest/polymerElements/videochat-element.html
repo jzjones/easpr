@@ -1,9 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <script src="../jquery_webrtc/jq.js"></script>
 <script src="../jquery_webrtc/simplewebrtc.js"></script>
-<link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="../../css/demo.css" rel="stylesheet">
-<script src="../../bootstrap/js/bootstrap.min.js"></script>
+<link href="../../easpr/bootstrap.min.css" rel="stylesheet">
+<link href="../../easpr/demo.css" rel="stylesheet">
+<script src="../../easpr/bootstrap.min.js"></script>
 <polymer-element name="easpr-element">
   <template>
   
@@ -41,7 +41,7 @@
   Polymer('easpr-element',{
 
   	ready:function(){
-  		this.webrtc=new SimpleWebRTC({
+  		this.webrtc=new WebRTC({
 	
 			// the id/element dom element that will hold "our" video
 			localVideoEl : 'localVideo',

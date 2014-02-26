@@ -4,7 +4,7 @@
 <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="../../css/demo.css" rel="stylesheet">
 <script src="../../bootstrap/js/bootstrap.min.js"></script>
-<polymer-element name="easpr-element">
+<polymer-element name="data-element">
   <template>
   
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -32,31 +32,25 @@
         	</div><!--/.navbar-collapse -->
       	</div>
     </div>
+    <div class="remote-data">
     
-	<div id="remotesVideos"></div>
-	<video height="500" id="localVideo"></video>
+    </div>
+    <span><input class="local-data" id="message-input"></input><button type="button" id="sendBtn" class = "btn btn-success" on-click="{{sendMessage}}">Send</button></span>
+    
+    
   </template>
 
   <script>
-  Polymer('easpr-element',{
+  Polymer('data-element',{
 
   	ready:function(){
-  		this.webrtc=new SimpleWebRTC({
-	
-			// the id/element dom element that will hold "our" video
-			localVideoEl : 'localVideo',
-			// the id/element dom element that will hold remote videos
-			remoteVideosEl : 'remotesVideos',
-			// immediately ask for camera access
-			autoRequestMedia : true
-			});
+  		this.webrtc=new SimpleWebRTC({});
+  		console.log(this.webrtc);
   	},
 
   	joinRoom:function(){
   		console.log("Click!");
 			if ($('#roomName').val() != "") {
-				 //console.log("got there");
-				$('#remotesVideos').empty();
 
 				var roomName = $('#roomName').val();
 				$('#roomName').val("");
@@ -67,6 +61,12 @@
 			} else {
 				alert("Room name can't be empty");
 			} 
+  	},
+  	
+  	sendMessage: function(){
+  		console.log("Send Message Clicked");
+  		console.log($("#message-input").val());
+  		this.webrtc.sendFile('text-data', $("#message-input").val());
   	}
   });
   </script>
