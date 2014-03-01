@@ -45,21 +45,26 @@
   	ready: function(){
   		
   		this.connection = new RTCMultiConnection();
-  		this.connection.joined = false;
+  		this.joined = false;
   		this.connection.session = {
   			audio: true,
   			video: true
   		}
   		this.connection.onclose = function(e){
+			console.log("inside onclose");  			
+			console.log(this);  			
   			this.joined = false;	
   		
-  		}
+  		};
   		this.connection.onstream = function(e){
   			
   			console.log("Adding video stream");
   			$('#videoStream').append(e.mediaElement);
   			
-  		}
+  		};
+  		this.connection.onstreamended = function(e){
+  			if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
+  		};
   		console.log("test");
   		console.log(this.connection.channel);
   	},
@@ -76,14 +81,14 @@
 // 			});
   	
   	createRoom:function(){
-		if(this.connection.joined){
-			this.connection.joined = false;
+		if(this.joined){
+			this.joined = false;
 			this.connection.leave(); 
   			$('#videoStream').empty();
 
 		}
-		this.connection.joined = true;
 		this.connection.open($('#roomName').val());
+		this.joined = true;
 		$('#roomName').val("");
 		this.connection.connect(this.connection.channel);
 		this.connection.join({
@@ -98,14 +103,15 @@
   	},
 
   	joinRoom:function(){
-  		if(this.connection.joined){
-			this.conection.joined = false;
+  		if(this.joined){
+			this.joined = false;
   			this.connection.leave();
   			$('#videoStream').empty();
 		
 		}
-  		this.connection.joined = true;
   		this.connection.connect($('#roomName').val());
+  		this.joined = true;
+
   		this.connection.join({
   		    sessionid: this.connection.channel,
   		    userid: 'initiator-id',
