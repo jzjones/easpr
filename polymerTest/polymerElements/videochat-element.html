@@ -48,7 +48,8 @@
   		this.joined = false;
   		this.connection.session = {
   			audio: true,
-  			video: true
+  			video: true,
+        screen: true
   		}
   		this.connection.onclose = function(e){
 			console.log("inside onclose");  			
