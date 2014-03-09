@@ -27,6 +27,7 @@
             		<button type="button" id="createBtn" class="btn btn-success" on-click="{{createRoom}}">Create Room</button>
             		<button type="button" id="joinBtn" class="btn btn-success" on-click="{{joinRoom}}">Join Room</button>
             		<div class="form-group">
+                    <span><input type='checkbox' id='screenShare'>Screen Share</span>
               			<span id="roomSpan">RoomName</span>
             		</div>
           		</form>
@@ -49,7 +50,7 @@
   		this.connection.session = {
   			audio: true,
   			video: true,
-        screen: true
+        screen: $('#screenShare').is(':checked')
   		}
   		this.connection.onclose = function(e){
 			console.log("inside onclose");  			
@@ -95,7 +96,7 @@
 		this.connection.join({
   		    sessionid: this.connection.channel,
   		    userid: 'initiator-id',
-  		    session: {audio:true,video:true,screen: true},
+  		    session: {audio:true,video:true,screen: $('#screenShare').is(':checked')},
   		    extra: {}
   		});
 		console.log(this.connection.channel);
@@ -116,7 +117,7 @@
   		this.connection.join({
   		    sessionid: this.connection.channel,
   		    userid: 'initiator-id',
-  		    session: {audio:true,video:true,screen: true},
+  		    session: {audio:true,video:true,screen: $('#screenShare').is(':checked')},
   		    extra: {}
   		});
 		console.log(this.connection.channel);
