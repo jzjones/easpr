@@ -21,3 +21,8 @@ body {
 .navbar-inverse .navbar-brand {
 	color: #ffffff;
 }
+#textBox{
+overflow:auto;
+height:150px;
+width:200px;
+}
