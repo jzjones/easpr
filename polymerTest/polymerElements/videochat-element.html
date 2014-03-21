@@ -4,13 +4,12 @@
 <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="../../css/demo.css" rel="stylesheet">
 <script src="../../bootstrap/js/bootstrap.min.js"></script>
+
 <polymer-element name="videochat-element" attributes="name sessionName">
   <template>
-  
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
           <div class="navbar-header">
-            
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
@@ -37,30 +36,24 @@
     </div>
 <!--Trying tto make a grid to house text and video peer elements-->
     <div id='peerDiv' class='.container'>
-
-  <div id='videoRow' class='row'>
-    
-  </div>
-  <div class='row'>
-    <div class='col-md-6'>
-      <div id='textChatDiv'>
-        <span><textarea id='textArea' rows="4" cols="30"></textArea>
-        <button type="button" id="textButton" class="btn btn-success" on-click="{{sendText}}">Send Text</button></span>
-        <div >
-          <textarea id='textBox'readonly></textarea>
+      <div id='videoRow' class='row'></div>
+      <div class='row'>
+        <div class='col-md-6'>
+          <div id='textChatDiv'>
+            <span><textarea id='textArea' rows="4" cols="30"></textArea>
+            <button type="button" id="textButton" class="btn btn-success" on-click="{{sendText}}">Send Text</button></span>
+            <div>
+              <textarea id='textBox'readonly></textarea>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-
     </div>
   </template>
 
   <script>
   Polymer('videochat-element',{
     
-    
-
     ready: function(){
       
       this.connection = new RTCMultiConnection();
@@ -69,87 +62,88 @@
         audio: true,
         video: true,
       }
+
       this.connection.onclose = function(e){
       console.log("inside onclose");        
       console.log(this);        
-        this.joined = false;  
-      
+      this.joined = false;  
       };
+
       this.connection.onstream = function(e){
         
         console.log("Adding video stream");
-        $('#videoRow').append("<div class='col-md-6'></div>").append(e.mediaElement);
-        
+        $('#videoRow').append("<div class='col-md-6'></div>").append(e.mediaElement);  
       };
+
       this.connection.onstreamended = function(e){
+
         if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
       };
-    this.connection.onCustomMessage = function(message){
-      var currentMessage=$('#textBox').val();
-      $('#textBox').val(currentMessage+'\n'+message);
-    };
+
+      this.connection.onCustomMessage = function(message){
+
+        var currentMessage=$('#textBox').val();
+
+        $('#textBox').val(currentMessage+'\n'+message);
+      };
+
       console.log("test");
       console.log(this.connection.channel);
     },
       
     
     createRoom:function(){
-    if(this.joined){
-      this.joined = false;
-      this.connection.leave(); 
+      if(this.joined){
+        this.joined = false;
+        this.connection.leave(); 
         $('#videoStream').empty();
         $('#textArea').val("");
         $('#textBox').val("");
-
-    }
+      }
       
     
-    this.connection.open($('#roomName').val());
-    this.joined = true;
-    $('#roomName').val("");
-    this.connection.connect(this.connection.channel);
-    this.connection.join({
-          sessionid: this.connection.channel,
-          userid: 'initiator-id',
-          session: {audio:true,video:true,screen: $('#screenShare').is(':checked'),data:$('#textEnable').is(':checked')},
-          extra: {}
-      });
-    console.log(this.connection.channel);
-
-      
+      this.connection.open($('#roomName').val());
+      this.joined = true;
+      $('#roomName').val("");
+      this.connection.connect(this.connection.channel);
+      this.connection.join({
+            sessionid: this.connection.channel,
+            userid: 'initiator-id',
+            session: {audio:true,video:true,screen: $('#screenShare').is(':checked'),data:$('#textEnable').is(':checked')},
+            extra: {}
+        });
+      console.log(this.connection.channel); 
     },
 
     joinRoom:function(){
       if(this.joined){
-      this.joined = false;
+        this.joined = false;
         this.connection.leave();
         $('#videoStream').empty();
         $('#textArea').val("");
         $('#textBox').val("");
     
-    }
+      }
+
       this.connection.connect($('#roomName').val());
       this.joined = true;
-
       this.connection.join({
           sessionid: this.connection.channel,
           userid: 'initiator-id',
           session: {audio:true,video:true,screen: $('#screenShare').is(':checked'),data:$('#textEnable').is(':checked')},
           extra: {}
       });
-    console.log(this.connection.channel);
-
+      console.log(this.connection.channel);
     },
 
-  sendText: function(){
+    sendText: function(){
 
-  var message=$('#textArea').val();
-  this.connection.sendCustomMessage(message);
-  var currentMessage=$('#textBox').val();
-  $('#textBox').val(currentMessage+'\n'+message);
-  $('#textArea').val("");
-
-  }
+      var message=$('#textArea').val();
+      this.connection.sendCustomMessage(message);
+      var currentMessage=$('#textBox').val();
+      $('#textBox').val(currentMessage+'\n'+message);
+      $('#textArea').val("");
+    }
   });
   </script>
 </polymer-element>
