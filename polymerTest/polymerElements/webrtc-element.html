@@ -1,0 +1,73 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<script src="../jquery_webrtc/jq.js"></script>
+<script src="../jquery_webrtc/rtc.js"></script>
+<link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../css/demo.css" rel="stylesheet">
+<script src="../../bootstrap/js/bootstrap.min.js"></script>
+<polymer-element name="webrtc-element" attributes="name sessionName">
+  <template>
+  </template>
+
+  <script>
+  Polymer('webrtc-element',{
+    
+    ready: function(){
+      
+      this.connection = new RTCMultiConnection();
+
+      this.joined = false;
+
+      this.connection.onclose = function(e){
+
+      console.log("inside onclose");        
+      console.log(this);        
+      this.joined = false;  
+      };
+
+    },
+      
+    createRoom:function(){
+
+      if(this.joined){
+        this.joined = false;
+        this.connection.leave(); 
+      }
+        
+      this.connection.open($('#roomName').val());
+
+      this.joined = true;
+
+      $('#roomName').val("");
+      this.connection.connect(this.connection.channel);
+      this.connection.join({
+            sessionid: this.connection.channel,
+            userid: 'initiator-id',
+            session: {audio:true,video:true,screen: $('#screenShare').is(':checked'),data:$('#textEnable').is(':checked')},
+            extra: {}
+        });
+      console.log(this.connection.channel);   
+    },
+
+    joinRoom:function(){
+      if(this.joined){
+        this.joined = false;
+        this.connection.leave();
+        $('#videoStream').empty();
+        $('#textArea').val("");
+        $('#textBox').val("");
+      }
+
+      this.connection.connect($('#roomName').val());
+      this.joined = true;
+
+      this.connection.join({
+          sessionid: this.connection.channel,
+          userid: 'initiator-id',
+          session: {audio:true,video:true,screen: $('#screenShare').is(':checked'),data:$('#textEnable').is(':checked')},
+          extra: {}
+      });
+      console.log(this.connection.channel);
+    }
+  });
+  </script>
+</polymer-element>
