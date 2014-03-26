@@ -84,7 +84,7 @@
 
         var currentMessage=$('#textBox').val();
 
-        $('#textBox').val(currentMessage+'\n'+'\n'+message);
+        $('#textBox').val(currentMessage+'\n\n'+message);
       };
 
       console.log("test");
@@ -143,7 +143,7 @@
       var message=$('#textArea').val();
       this.connection.sendCustomMessage(this.connection.userid+': '+message);
       var currentMessage=$('#textBox').val();
-      $('#textBox').val(currentMessage+'\n'+'\n'+this.connection.userid+': '+message);
+      $('#textBox').val(currentMessage+'\n\n'+this.connection.userid+': '+message);
       $('#textArea').val("");
     }
   });
