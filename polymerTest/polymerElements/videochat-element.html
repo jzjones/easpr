@@ -43,7 +43,7 @@
             <span><textarea id='textArea' rows="4" cols="30"></textArea>
             <button type="button" id="textButton" class="btn btn-success" on-click="{{sendText}}">Send Text</button></span>
             <div>
-              <textarea id='textBox'readonly></textarea>
+              <textarea id='textBox' readonly></textarea>
             </div>
           </div>
         </div>
@@ -84,7 +84,7 @@
 
         var currentMessage=$('#textBox').val();
 
-        $('#textBox').val(currentMessage+'\n'+message);
+        $('#textBox').val(currentMessage+'\n'+'\n'+message);
       };
 
       console.log("test");
@@ -113,6 +113,8 @@
             extra: {}
         });
       console.log(this.connection.channel); 
+      //this.connection.userid='tyler';
+      console.log(this.connection.userid);
     },
 
     joinRoom:function(){
@@ -139,9 +141,9 @@
     sendText: function(){
 
       var message=$('#textArea').val();
-      this.connection.sendCustomMessage(message);
+      this.connection.sendCustomMessage(this.connection.userid+': '+message);
       var currentMessage=$('#textBox').val();
-      $('#textBox').val(currentMessage+'\n'+message);
+      $('#textBox').val(currentMessage+'\n'+'\n'+this.connection.userid+': '+message);
       $('#textArea').val("");
     }
   });
