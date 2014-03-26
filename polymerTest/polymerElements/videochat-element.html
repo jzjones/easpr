@@ -1,3 +1,7 @@
+<link rel="stylesheet" href="../../leaflet/leaflet.css" />
+<link rel="stylesheet" href="../index.css">
+<script src="../../leaflet/leaflet.js"></script>
+
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <script src="../jquery_webrtc/jq.js"></script>
 <script src="../jquery_webrtc/rtc.js"></script>
@@ -48,6 +52,7 @@
           </div>
         </div>
       </div>
+      <div id="map"></div>
     </div>
   </template>
 
@@ -55,6 +60,19 @@
   Polymer('videochat-element',{
     
     ready: function(){
+      var mapEl = this.shadowRoot.querySelector("#map");
+      
+      var myIcon = L.icon({
+    	    iconUrl: '../leaflet/images/marker-icon.png',
+    	    iconRetinaUrl: '../leaflet/images/marker-icon-2x.png',
+    	    iconSize: [38, 95],
+    	    iconAnchor: [22, 94],
+    	    popupAnchor: [-3, -76],
+    	    shadowUrl: '../leaflet/images/marker-shadow.png',
+    	    shadowRetinaUrl: '../leaflet/images/marker-shadow.png',
+    	    shadowSize: [68, 95],
+    	    shadowAnchor: [22, 94]
+    	});
       
       this.connection = new RTCMultiConnection();
       this.joined = false;
@@ -62,11 +80,27 @@
         audio: true,
         video: true,
       }
+	  
+	  var map = L.map(mapEl).setView([51.505, -0.09], 13);
+ 	
+	  L.tileLayer('http://{s}.tile.cloudmade.com/795f9e9d19094307867649e8d21d3f46/997/256/{z}/{x}/{y}.png', {
+		  maxZoom: 18,
+		  attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+  	  }).addTo(map);
+	  var con = this.connection;
+	  function onMapClick(e) {
+		  marker = new L.marker(e.latlng, {icon:myIcon, draggable:'false'}).addTo(map);
+		  var jsonMarker = JSON.stringify({"latlng": e.latlng});
+		  console.log(this);
+		  con.sendCustomMessage(jsonMarker);
+	  }
 
+	  map.on('click', onMapClick);
+      
       this.connection.onclose = function(e){
-      console.log("inside onclose");        
-      console.log(this);        
-      this.joined = false;  
+        console.log("inside onclose");        
+        console.log(this);        
+        this.joined = false;  
       };
 
       this.connection.onstream = function(e){
@@ -76,15 +110,16 @@
       };
 
       this.connection.onstreamended = function(e){
-
         if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
       };
 
       this.connection.onCustomMessage = function(message){
-
+		var jsonMarker = JSON.parse(message);
+		L.marker(jsonMarker.latlng, {icon:myIcon, draggable:'false'}).addTo(map);
+    	/*
         var currentMessage=$('#textBox').val();
 
-        $('#textBox').val(currentMessage+'\n'+message);
+        $('#textBox').val(currentMessage+'\n'+message);*/
       };
 
       console.log("test");
