@@ -1,10 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<script src="../jquery_webrtc/jq.js"></script>
 <script src="../jquery_webrtc/rtc.js"></script>
-<link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="../../css/demo.css" rel="stylesheet">
-<script src="../../bootstrap/js/bootstrap.min.js"></script>
-<polymer-element name="webrtc-element" attributes="name sessionName">
+<polymer-element name="webrtc-element" attributes="sessionData sessionName">
   <template>
   </template>
 
@@ -16,7 +12,8 @@
       this.connection = new RTCMultiConnection();
 
       //session object to override when extending base element
-      this.session = {audio:false,video:false,screen: false,data:false},
+      this.session = sessionData;
+
       this.joined = false;
 
       this.connection.onclose = function(e){
@@ -35,7 +32,7 @@
         this.connection.leave(); 
       }
         
-      this.connection.open($('#roomName').val());
+      this.connection.open(sessionName);
 
       this.joined = true;
 
@@ -50,13 +47,13 @@
       console.log(this.connection.channel);   
     },
 
-    joinRoom:function(roomId){
+    joinRoom:function(){
       if(this.joined){
         this.joined = false;
         this.connection.leave();
       }
 
-      this.connection.connect(roomId);
+      this.connection.connect(sessionName);
       this.joined = true;
 
       this.connection.join({
