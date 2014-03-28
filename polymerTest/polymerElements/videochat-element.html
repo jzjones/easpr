@@ -73,6 +73,10 @@
     	    shadowSize: [68, 95],
     	    shadowAnchor: [22, 94]
     	});
+      var map = L.map(mapEl).setView([51.505, -0.09], 13);
+ 	  var markerLayer = L.layerGroup([]);
+ 	  this.mLayer = markerLayer;
+ 	  markerLayer.addTo(map);
       
       var isMapUpdated = true;
       this.connection = new RTCMultiConnection();
@@ -81,26 +85,12 @@
         audio: true,
         video: true,
       }
-	  
-	  var map = L.map(mapEl).setView([51.505, -0.09], 13);
-      
-      /*var littleton = L.marker([39.61, -105.02],{icon:myIcon}).bindPopup('This is Littleton, CO.'),
-      	denver    = L.marker([39.74, -104.99],{icon:myIcon}).bindPopup('This is Denver, CO.'),
-      	aurora    = L.marker([39.73, -104.8],{icon:myIcon}).bindPopup('This is Aurora, CO.'),
-      	golden    = L.marker([39.77, -105.23],{icon:myIcon}).bindPopup('This is Golden, CO.');
-      
-      var cities = L.layerGroup([littleton, denver, aurora]);
-      
-      cities.addTo(map);
-      cities.addLayer(golden);
- 	  */
- 	  var markerLayer = L.layerGroup([]);
- 	  markerLayer.addTo(map);
  	  
 	  L.tileLayer('http://{s}.tile.cloudmade.com/795f9e9d19094307867649e8d21d3f46/997/256/{z}/{x}/{y}.png', {
 		  maxZoom: 18,
 		  attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
   	  }).addTo(map);
+      
 	  var con = this.connection;
 	  function onMapClick(e) {
 		  markerLayer.addLayer(L.marker(e.latlng, {icon:myIcon, draggable:'false'}))
@@ -150,7 +140,6 @@
       console.log("test");
       console.log(this.connection.channel);
     },
-      
     
     createRoom:function(){
       isMapUpdated = true;
@@ -160,9 +149,10 @@
         $('#videoStream').empty();
         $('#textArea').val("");
         $('#textBox').val("");
+        //markerLayer.clearLayers();
+        this.mLayer.clearLayers();
       }
-      
-    
+
       this.connection.open($('#roomName').val());
       this.joined = true;
       $('#roomName').val("");
@@ -184,7 +174,8 @@
         $('#videoStream').empty();
         $('#textArea').val("");
         $('#textBox').val("");
-    
+        //markerLayer.clearLayers();
+        this.mLayer.clearLayers();
       }
 
       this.connection.connect($('#roomName').val());
@@ -197,7 +188,7 @@
       });
       
       console.log(this.connection.channel);
-      var jsonMarker = JSON.stringify({"type":mapRequest, "latlng": e.latlng});
+      //var jsonMarker = JSON.stringify({"type":"mapRequest", "latlng": e.latlng});
     },
 
     sendText: function(){
