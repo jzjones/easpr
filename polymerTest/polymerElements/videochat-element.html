@@ -4,7 +4,7 @@
 <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="../../css/demo.css" rel="stylesheet">
 <script src="../../bootstrap/js/bootstrap.min.js"></script>
-<polymer-element name="videochat-element" attributes="name sessionName">
+<polymer-element name="videochat-element" attributes="name sessionName" extends="webrtc-element">
   <template>
   
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -24,8 +24,7 @@
                 <div class="form-group" id="roomNav">
                     <input type="text" placeholder="Room name" id="roomName" name="roomName" class="form-control">
                 </div>
-                <button type="button" id="createBtn" class="btn btn-success" on-click="{{createRoom}}">Create Room</button>
-                <button type="button" id="joinBtn" class="btn btn-success" on-click="{{joinRoom}}">Join Room</button>
+                <button type="button" id="createBtn" class="btn btn-success" on-click="{{attemptJoin}}">Join Room</button>
                 <div class="form-group">
                   <span><input type='checkbox' id='textEnable' >Enable Text</span>
                   <span><input type='checkbox' id='screenShare' >Screen Share</span>
@@ -62,19 +61,11 @@
     
 
     ready: function(){
-      
+      this.super();
+      this.session = {audio: true, video: true};
       this.connection = new RTCMultiConnection();
-      this.joined = false;
-      this.connection.session = {
-        audio: true,
-        video: true,
-      }
-      this.connection.onclose = function(e){
-      console.log("inside onclose");        
-      console.log(this);        
-        this.joined = false;  
+     
       
-      };
       this.connection.onstream = function(e){
         
         console.log("Adding video stream");
@@ -84,72 +75,8 @@
       this.connection.onstreamended = function(e){
         if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
       };
-    this.connection.onCustomMessage = function(message){
-      var currentMessage=$('#textBox').val();
-      $('#textBox').val(currentMessage+'\n'+message);
-    };
-      console.log("test");
-      console.log(this.connection.channel);
-    },
-      
     
-    createRoom:function(){
-    if(this.joined){
-      this.joined = false;
-      this.connection.leave(); 
-        $('#videoStream').empty();
-        $('#textArea').val("");
-        $('#textBox').val("");
-
-    }
-      
     
-    this.connection.open($('#roomName').val());
-    this.joined = true;
-    $('#roomName').val("");
-    this.connection.connect(this.connection.channel);
-    this.connection.join({
-          sessionid: this.connection.channel,
-          userid: 'initiator-id',
-          session: {audio:true,video:true,screen: $('#screenShare').is(':checked'),data:$('#textEnable').is(':checked')},
-          extra: {}
-      });
-    console.log(this.connection.channel);
-
-      
-    },
-
-    joinRoom:function(){
-      if(this.joined){
-      this.joined = false;
-        this.connection.leave();
-        $('#videoStream').empty();
-        $('#textArea').val("");
-        $('#textBox').val("");
-    
-    }
-      this.connection.connect($('#roomName').val());
-      this.joined = true;
-
-      this.connection.join({
-          sessionid: this.connection.channel,
-          userid: 'initiator-id',
-          session: {audio:true,video:true,screen: $('#screenShare').is(':checked'),data:$('#textEnable').is(':checked')},
-          extra: {}
-      });
-    console.log(this.connection.channel);
-
-    },
-
-  sendText: function(){
-
-  var message=$('#textArea').val();
-  this.connection.sendCustomMessage(message);
-  var currentMessage=$('#textBox').val();
-  $('#textBox').val(currentMessage+'\n'+message);
-  $('#textArea').val("");
-
-  }
   });
   </script>
 </polymer-element>
