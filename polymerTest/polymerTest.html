@@ -4,15 +4,8 @@
 	<script src="bower_components/platform/platform.js"></script>
 
 	<link rel="import" href="polymerElements/webrtc-element.html">
-	<script>
-// var baseEl = new RTCElement("test2");
-// var baseEl = document.createElement('webrtc-element');
-var baseEl2 = new webRTC();
-
-document.getElementById("testDiv").appendChild(baseEl2);
-
-
-</script>
+	<link rel="import" href="polymerElements/test-element.html">
+	
 </head>
 <body>
 <!-- <easpr-element></easpr-element> -->
@@ -21,11 +14,29 @@ document.getElementById("testDiv").appendChild(baseEl2);
 <data-element sessionName="test"></data-element>
 
 <div id="testDiv">
-
+<test-element></test-element>
 </div>
 
 
 
 
 </body>
+<script>
+// var baseEl = new RTCElement("test2");
+// var baseEl = document.createElement('webrtc-element');
+document.addEventListener('polymer-ready', function() {
+  console.log(WebRTCElement);
+  console.log(window);
+  var baseEl = new WebRTCElement();
+  //baseEl.sessionName = "happy";
+  //baseEl.sessionData = {audio: true, video: true};
+  document.getElementById("testDiv").appendChild(baseEl);
+  console.log(baseEl);
+
+});
+//var baseEl2 = new testElement();
+
+
+
+</script>
 </html>
