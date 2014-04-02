@@ -1,82 +1,28 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<script src="../jquery_webrtc/jq.js"></script>
+<link rel='import' href='./webrtc-element.html'>
 <script src="../jquery_webrtc/rtc.js"></script>
-<link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="../../css/demo.css" rel="stylesheet">
-<script src="../../bootstrap/js/bootstrap.min.js"></script>
-<polymer-element name="videochat-element" attributes="name sessionName" extends="webrtc-element">
+
+<polymer-element name="videochat-element" attributes="name sessionName" extends="webrtc-element" constructor='videoChatElement'>
   <template>
-  
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-          <div class="navbar-header">
-            
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#">Easpr Demo</a>
-          </div>
-          <div class="navbar-collapse collapse">
-              <form class="navbar-form navbar-right" role="form">
-                <div class="form-group" id="roomNav">
-                    <input type="text" placeholder="Room name" id="roomName" name="roomName" class="form-control">
-                </div>
-                <button type="button" id="createBtn" class="btn btn-success" on-click="{{attemptJoin}}">Join Room</button>
-                <div class="form-group">
-                  <span><input type='checkbox' id='textEnable' >Enable Text</span>
-                  <span><input type='checkbox' id='screenShare' >Screen Share</span>
-                    <span id="roomSpan"></span>
-                </div>
-              </form>
-          </div><!--/.navbar-collapse -->
-        </div>
-    </div>
-<!--Trying tto make a grid to house text and video peer elements-->
-    <div id='peerDiv' class='.container'>
-
-  <div id='videoRow' class='row'>
-    
-  </div>
-  <div class='row'>
-    <div class='col-md-6'>
-      <div id='textChatDiv'>
-        <span><textarea id='textArea' rows="4" cols="30"></textArea>
-        <button type="button" id="textButton" class="btn btn-success" on-click="{{sendText}}">Send Text</button></span>
-        <div >
-          <textarea id='textBox'readonly></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    </div>
+    <div id='videoRow'></div>
   </template>
 
   <script>
   Polymer('videochat-element',{
-    
-    
-
+       
     ready: function(){
       this.super();
-      this.session = {audio: true, video: true};
-      this.connection = new RTCMultiConnection();
-     
-      
+        console.log('base connection on ready in Videoelement'+this.connection);
+        var root=this.shadowRoot;
       this.connection.onstream = function(e){
-        
-        console.log("Adding video stream");
-        $('#videoRow').append("<div class='col-md-6'></div>").append(e.mediaElement);
-        
+        root.querySelector('#videoRow').appendChild(e.mediaElement) 
       };
+
       this.connection.onstreamended = function(e){
         if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
       };
-    
-    
+    }
+     
   });
   </script>
 </polymer-element>

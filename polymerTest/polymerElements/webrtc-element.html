@@ -1,16 +1,17 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <script src="../jquery_webrtc/rtc.js"></script>
-<polymer-element name="webrtc-element" constructor="WebRTCElement">
+<polymer-element name="webrtc-element" constructor="baseElement">
 <template> </template> <script>
 Polymer('webrtc-element',{
 	ready: function(){
-      	this.connection.session = {audio: false, video: false, screen: false, data: false};
+        this.connection = new RTCMultiConnection();
+        this.connection.session = {audio: false, video: false, screen: false, data: false};
+        console.log('base connection on ready'+this.connection);
     },
     
     initialize: function(channelid, session){
-    	this.connection = new RTCMultiConnection(channelid);
+    	this.connection.channel=channelid;
     	this.connection.session = session;
-    	this.connection.join();
     },
     
     //sets sessionid
@@ -39,17 +40,19 @@ Polymer('webrtc-element',{
         socket.emit('presence', channel);
     },
       
-    initiate: function(roomId){
-      	this.connection.open({
-    	  	sessionid: roomId,
-    	  	session: this.session
-    	});
+    initiate: function(){
+      	var sDescript=this.connection.open();
+        this.connection.join(sDescript);
     },
 
-    join: function(roomId){
-		this.connection.connect(roomId);
-	    this.connection.join();
-	    console.log(this.connection.channel);
+    join: function(){
+		this.connection.connect(this.connection.channel);
+	    //this.connection.join();
+	    //console.log(this.connection.channel);
+    },
+
+    end: function(){
+        this.connection.leave();
     },
     
     test: function(){
