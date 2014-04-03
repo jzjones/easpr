@@ -12,10 +12,11 @@
        
     ready: function(){
       this.super();
-        console.log('base connection on ready in Videoelement'+this.connection);
-        var root=this.shadowRoot;
+      console.log('base connection on ready in Videoelement'+this.connection);
+      var root=this.shadowRoot;
+      
       this.connection.onstream = function(e){
-        root.querySelector('#videoRow').appendChild(e.mediaElement) 
+      root.querySelector('#videoRow').appendChild(e.mediaElement) 
       };
 
       this.connection.onstreamended = function(e){
