@@ -6,23 +6,17 @@
   <link rel="import" href="../polymerElements/webrtc-element.html">
   <link rel="import" href="../polymerElements/videochat-element.html">
   <link rel="stylesheet" href="mocha/mocha.css" />
-  <script src="mocha/require.js"></script>
 </head>
 <body>
   <div id="mocha"></div>
   <script src="mocha/mocha.js"></script>
   <script src="mocha/chai.js"></script>
-
+  <script src="../session.js"></script>
   <script>mocha.setup('bdd')</script>
+  <script src="test.session.js"></script>
   <script>
-  console.log(videoChatElement);
   document.addEventListener('polymer-ready', function() {
-    require(['../session', 'test.session'], function(){
-      console.log("required");
-      console.log(videoChatElement);
-    })
-    //mocha.run();
-    console.log(videoChatElement);
+    mocha.run();
   })
   </script>
 </body>
