@@ -1,0 +1,56 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel='import' href='./webrtc-element.html'>
+<link rel='import' href='videochat-element.html'>
+<link rel='import' href='textchat-element.html'>
+
+<script src="../jquery_webrtc/rtc.js"></script>
+
+<polymer-element name="webrtc-container" attributes="name sessionName" extends="webrtc-element" constructor='WebRTCContainer'>
+  <template>
+    <div id='elementDiv'>
+    <div id="videoDiv"></div>
+    <div id="textDiv"></div>
+    </div>
+  </template>
+
+  <script>
+  Polymer('webrtc-container',{
+       
+    ready: function(){
+      this.super();
+    },
+    
+    initialize: function(channelid, session){
+    	this.super(channelid, session);
+    	this.addVideo();
+    	this.addText();
+    },
+    
+    addVideo: function(){
+    	var vidEl = new VideoChatElement();
+    	vidEl.initialize(this.connection.channel);
+    	this.shadowRoot.querySelector('#elementDiv').appendChild(vidEl);
+    },
+    
+    addText: function(){
+    	var textEl = new TextChatElement();
+    	textEl.initialize(this.connection.channel);
+    	this.shadowRoot.querySelector('#elementDiv').appendChild(textEl);
+    },
+    
+    removeVideo: function(){
+    	var vidEl = this.shadowRoot.querySelector('#elementDiv').querySelector("videochat-element");
+    	vidEl.end();
+    	this.shadowRoot.querySelector('#elementDiv').removeChild(vidEl);
+    },
+    
+    removeText: function(){
+    	var textEl = this.shadowRoot.querySelector('#elementDiv').querySelector("textchat-element");
+    	textEl.end();
+    	this.shadowRoot.querySelector('#elementDiv').removeChild(textEl);
+    }
+  
+     
+  });
+  </script>
+</polymer-element>

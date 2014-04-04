@@ -2,7 +2,7 @@
 <link rel='import' href='./webrtc-element.html'>
 <script src="../jquery_webrtc/rtc.js"></script>
 
-<polymer-element name="videochat-element" attributes="name sessionName" extends="webrtc-element" constructor='videoChatElement'>
+<polymer-element name="videochat-element" attributes="name sessionName" extends="webrtc-element" constructor='VideoChatElement'>
   <template>
     <div id='videoRow'></div>
   </template>
@@ -22,7 +22,12 @@
       this.connection.onstreamended = function(e){
         if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
       };
-    }
+    },
+    
+    initialize: function(channelid){
+    	this.super(channelid, {video: true, audio: true});
+    	this.connection.sessionid = ("video_" + this.connection.channel);
+    },
      
   });
   </script>
