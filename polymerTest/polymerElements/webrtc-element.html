@@ -10,10 +10,6 @@ Polymer('webrtc-element',{
     },
     
     initialize: function(channelID, sessionObj){
-        console.log('inside base initialize');
-        console.log(channelID);
-        console.log('sessionObjs is:');
-        console.log(sessionObj);
     	this.connection.channel=channelID;
     	this.connection.session = sessionObj;
     },
@@ -45,12 +41,19 @@ Polymer('webrtc-element',{
     },
       
     initiate: function(){
-      	var sDescript=this.connection.open();
+    	var sDescript=this.connection.open();
+    	console.log(this.connection);
         this.connection.join(sDescript);
+      	
+        //this.connection.join(sDescript);
     },
 
     join: function(){
-		this.connection.connect(this.connection.channel);
+    	//var sDescript=this.connection.open();
+      	//this.connection.join(this.connection);
+		this.connection.connect(this.connection.sessionid);
+		//this.connection.join();
+		//this.connection.open();
 	    //this.connection.join();
 	    //console.log(this.connection.channel);
     },

@@ -1,6 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel='import' href='./webrtc-element.html'>
-<script src="../jquery_webrtc/rtc.js"></script>
 
 <polymer-element name="videochat-element" attributes="name sessionName" extends="webrtc-element" constructor='VideoChatElement'>
   <template>
@@ -14,19 +13,25 @@
       this.super();
       console.log('base connection on ready in Videoelement'+this.connection);
       var root=this.shadowRoot;
-      
       this.connection.onstream = function(e){
-      root.querySelector('#videoRow').appendChild(e.mediaElement) 
+    	console.log("adding stream");
+      	root.querySelector('#videoRow').appendChild(e.mediaElement); 
       };
 
       this.connection.onstreamended = function(e){
         if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
       };
+      
     },
     
     initialize: function(channelID){
+    	console.log("video initialize");
     	this.super([channelID, {video: true, audio: true}]);
     	this.connection.sessionid = ("video_" + this.connection.channel);
+    	console.log('video sessionid is:');
+    	console.log(this.connection.sessionid);
+    	console.log(this.connection);
+    	
     },
      
   });

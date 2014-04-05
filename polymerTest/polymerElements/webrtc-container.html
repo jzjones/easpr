@@ -3,7 +3,6 @@
 <link rel='import' href='videochat-element.html'>
 <link rel='import' href='textchat-element.html'>
 
-<script src="../jquery_webrtc/rtc.js"></script>
 
 <polymer-element name="webrtc-container" attributes="name sessionName" extends="webrtc-element" constructor='WebRTCContainer'>
   <template>
@@ -21,8 +20,8 @@
     },
     
     initialize: function(channelID,attempt){
-        console.log('inside initialize for container');
-    	this.super([channelID,{audio: false, video: false, screen: false, data: false}]);
+        var session = {audio: false, video: false, screen: false, data: false};
+    	this.super([channelID, session]);
     	this.addVideo(attempt);
     	this.addText(attempt);
     },

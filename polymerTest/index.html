@@ -31,7 +31,7 @@ document.addEventListener('polymer-ready', function() {
 
     var elContainer=new WebRTCContainer();
 
-    elContainer.initialize([document.getElementById('roomInput').value,'createSOmethingElse']);
+    elContainer.initialize(document.getElementById('roomInput').value,'create');
     cDiv.appendChild(elContainer);
   }
 
@@ -43,7 +43,7 @@ document.addEventListener('polymer-ready', function() {
       }
 
     var elContainer=new WebRTCContainer();
-    elContainer.initialize([document.getElementById('roomInput').value,'join']);
+    elContainer.initialize(document.getElementById('roomInput').value,'join');
     cDiv.appendChild(elContainer);
   }
 
