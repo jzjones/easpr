@@ -24,8 +24,8 @@
       };
     },
     
-    initialize: function(channelid){
-    	this.super(channelid, {video: true, audio: true});
+    initialize: function(channelID){
+    	this.super([channelID, {video: true, audio: true}]);
     	this.connection.sessionid = ("video_" + this.connection.channel);
     },
      

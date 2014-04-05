@@ -9,9 +9,13 @@ Polymer('webrtc-element',{
         console.log('base connection on ready'+this.connection);
     },
     
-    initialize: function(channelid, session){
-    	this.connection.channel=channelid;
-    	this.connection.session = session;
+    initialize: function(channelID, sessionObj){
+        console.log('inside base initialize');
+        console.log(channelID);
+        console.log('sessionObjs is:');
+        console.log(sessionObj);
+    	this.connection.channel=channelID;
+    	this.connection.session = sessionObj;
     },
     
     //sets sessionid

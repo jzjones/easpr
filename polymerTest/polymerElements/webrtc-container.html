@@ -8,8 +8,8 @@
 <polymer-element name="webrtc-container" attributes="name sessionName" extends="webrtc-element" constructor='WebRTCContainer'>
   <template>
     <div id='elementDiv'>
-    <div id="videoDiv"></div>
-    <div id="textDiv"></div>
+        <div id="videoDiv"></div>
+        <div id="textDiv"></div>
     </div>
   </template>
 
@@ -20,34 +20,45 @@
       this.super();
     },
     
-    initialize: function(channelid, session){
-    	this.super(channelid, session);
-    	this.addVideo();
-    	this.addText();
+    initialize: function(channelID,attempt){
+        console.log('inside initialize for container');
+    	this.super([channelID,{audio: false, video: false, screen: false, data: false}]);
+    	this.addVideo(attempt);
+    	this.addText(attempt);
     },
     
-    addVideo: function(){
+    addVideo: function(attempt){
     	var vidEl = new VideoChatElement();
     	vidEl.initialize(this.connection.channel);
-    	this.shadowRoot.querySelector('#elementDiv').appendChild(vidEl);
+    	this.shadowRoot.querySelector('#videoDiv').appendChild(vidEl);
+         if(attempt==='create'){
+            vidEl.initiate();
+        }else{
+            vidEl.join();
+        }
     },
     
-    addText: function(){
+    addText: function(attempt){
     	var textEl = new TextChatElement();
     	textEl.initialize(this.connection.channel);
-    	this.shadowRoot.querySelector('#elementDiv').appendChild(textEl);
+    	this.shadowRoot.querySelector('#textDiv').appendChild(textEl);
+        if(attempt==='create'){
+            textEl.initiate();
+        }else{
+            textEl.join();
+        }
     },
     
     removeVideo: function(){
-    	var vidEl = this.shadowRoot.querySelector('#elementDiv').querySelector("videochat-element");
+    	var vidEl = this.shadowRoot.querySelector('#videoDiv').querySelector("videochat-element");
     	vidEl.end();
-    	this.shadowRoot.querySelector('#elementDiv').removeChild(vidEl);
+    	this.shadowRoot.querySelector('#videoDiv').removeChild(vidEl);
     },
     
     removeText: function(){
-    	var textEl = this.shadowRoot.querySelector('#elementDiv').querySelector("textchat-element");
+    	var textEl = this.shadowRoot.querySelector('#textDiv').querySelector("textchat-element");
     	textEl.end();
-    	this.shadowRoot.querySelector('#elementDiv').removeChild(textEl);
+    	this.shadowRoot.querySelector('#textDiv').removeChild(textEl);
     }
   
      

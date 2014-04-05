@@ -3,8 +3,9 @@
 <head>
 	<script src="bower_components/platform/platform.js"></script>
 	<link rel="import" href="polymerElements/webrtc-element.html">
-<!-- 	<link rel="import" href="polymerElements/videochat-element.html"> -->
+	<link rel="import" href="polymerElements/videochat-element.html">
   <link rel="import" href="polymerElements/textchat-element.html">
+    <link rel="import" href="polymerElements/webrtc-container.html">
 	
 </head>
 <body>
@@ -20,7 +21,31 @@
 // var baseEl = new RTCElement("test2");
 // var baseEl = document.createElement('webrtc-element');
 document.addEventListener('polymer-ready', function() {
-  
+
+  document.getElementById('createRoom').onclick=function(){
+     var cDiv=document.getElementById("channelDiv");
+      while(cDiv.hasChildNodes()){
+        cDiv.firstChild.end();
+        cDiv.removeChild(cDiv.firstchild)
+      }
+
+    var elContainer=new WebRTCContainer();
+
+    elContainer.initialize([document.getElementById('roomInput').value,'createSOmethingElse']);
+    cDiv.appendChild(elContainer);
+  }
+
+   document.getElementById('joinRoom').onclick=function(){
+     var cDiv=document.getElementById("channelDiv");
+      while(cDiv.hasChildNodes()){
+        cDiv.firstChild.end();
+        cDiv.removeChild(cDiv.firstchild)
+      }
+
+    var elContainer=new WebRTCContainer();
+    elContainer.initialize([document.getElementById('roomInput').value,'join']);
+    cDiv.appendChild(elContainer);
+  }
 
   // document.getElementById('createRoom').onclick=function(){
   //   var cDiv=document.getElementById("channelDiv");
@@ -45,30 +70,30 @@ document.addEventListener('polymer-ready', function() {
   //   cDiv.appendChild(vidEl);
   //   vidEl.join();
   // }
-  document.getElementById('createRoom').onclick=function(){
-    var cDiv=document.getElementById("channelDiv");
-      while(cDiv.hasChildNodes()){
-        cDiv.firstChild.end();
-        cDiv.removeChild(cDiv.firstchild)
-      }
-    console.log(window);
-    var textEl = new textChatElement();
-    textEl.initialize(document.getElementById('roomInput').value,{data:true});
-    cDiv.appendChild(textEl);
-    textEl.initiate();
-  }
+  // document.getElementById('createRoom').onclick=function(){
+  //   var cDiv=document.getElementById("channelDiv");
+  //     while(cDiv.hasChildNodes()){
+  //       cDiv.firstChild.end();
+  //       cDiv.removeChild(cDiv.firstchild)
+  //     }
+  //   console.log(window);
+  //   var textEl = new textChatElement();
+  //   textEl.initialize(document.getElementById('roomInput').value,{data:true});
+  //   cDiv.appendChild(textEl);
+  //   textEl.initiate();
+  // }
 
-  document.getElementById('joinRoom').onclick=function(){
-    var cDiv=document.getElementById('channelDiv');
-    while(cDiv.hasChildNodes()){
-       cDiv.firstChild.end();
-       cDiv.removeChild(cDiv.firstchild);
-    }
-    var textEl = new textChatElement();
-    textEl.initialize(document.getElementById('roomInput').value,{data:true});
-    cDiv.appendChild(textEl);
-    textEl.join();
-  }
+  // document.getElementById('joinRoom').onclick=function(){
+  //   var cDiv=document.getElementById('channelDiv');
+  //   while(cDiv.hasChildNodes()){
+  //      cDiv.firstChild.end();
+  //      cDiv.removeChild(cDiv.firstchild);
+  //   }
+  //   var textEl = new textChatElement();
+  //   textEl.initialize(document.getElementById('roomInput').value,{data:true});
+  //   cDiv.appendChild(textEl);
+  //   textEl.join();
+  // }
 });
 
 </script>

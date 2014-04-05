@@ -21,19 +21,19 @@
       var root=this.shadowRoot;
       this.connection.onCustomMessage = function(message){
 
-      var mDiv = document.createElement('div');
-      var span=document.createElement('span');
-      span.innerHTML=message;
-      console.log(span);
-      mDiv.appendChild(span);
-      console.log(mDiv);
-      root.querySelector('#viewText').appendChild(mDiv);
-
+        var mDiv = document.createElement('div');
+        var span=document.createElement('span');
+        span.innerHTML=message;
+        console.log(span);
+        mDiv.appendChild(span);
+        console.log(mDiv);
+        root.querySelector('#viewText').appendChild(mDiv);
       };
+      
     },
     
-    initialize: function(channelid){
-    	this.super(channelid, {data: true});
+    initialize: function(channelID){
+    	this.super([channelID, {data: true}]);
     	this.connection.sessionid = ("text_" + this.connection.channel);
     },
     
@@ -49,6 +49,7 @@
     },
     sendText: function(){
       console.log('inside sendText');
+      console.log(this.connection);
       this.shadowRoot.querySelector('#viewText').appendChild(this.createMessage());
       
     }
