@@ -1,0 +1,80 @@
+<link rel="stylesheet" href="leaflet.css" />
+<script src="leaflet.js"></script>
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<polymer-element name="map-element" attributes="name sessionName" extends="webrtc-element" constructor="MapElement">
+  <template>
+    <div id="map" style='height:180px'></div>
+  </template>
+
+  <script>
+  Polymer('map-element',{
+    
+    ready: function(){
+      this.super();
+      var mapEl = this.shadowRoot.querySelector("#map");
+      
+      var myIcon = L.icon({
+    	    iconUrl: 'polymerElements/images/marker-icon.png',
+    	    iconRetinaUrl: 'polymerElements/images/marker-icon-2x.png',
+    	    iconSize: [38, 95],
+    	    iconAnchor: [22, 94],
+    	    popupAnchor: [-3, -76],
+    	    shadowUrl: 'polymerElements/images/marker-shadow.png',
+    	    shadowRetinaUrl: 'polymerElements/images/marker-shadow.png',
+    	    shadowSize: [68, 95],
+    	    shadowAnchor: [22, 94]
+    	});
+
+      var map = L.map(mapEl).setView([35.93, -79.03], 13);
+ 	    var markerLayer = L.layerGroup([]);
+ 	    this.mLayer = markerLayer;
+ 	    markerLayer.addTo(map);
+      
+      this.isMapUpdated = true;
+ 	  
+      var TILE_LOCATION = 'http://{s}.tile.cloudmade.com/795f9e9d19094307867649e8d21d3f46/997/256/{z}/{x}/{y}.png';
+
+	    L.tileLayer(TILE_LOCATION, {
+		    maxZoom: 18,
+		    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+  	  }).addTo(map);
+      
+  	  var con = this.connection;
+
+  	  function onMapClick(e) {
+  		  markerLayer.addLayer(L.marker(e.latlng, {icon:myIcon, draggable:'false'}))
+  		  var jsonMarker = JSON.stringify({"type":"marker", "latlng": e.latlng});
+  		  con.sendCustomMessage(jsonMarker);
+  	  }
+
+  	  map.on('click', onMapClick);
+
+      this.connection.onCustomMessage = function(message){
+      	var jsonMessage = JSON.parse(message);
+
+      	if (jsonMessage.type === "marker"){
+    		  var jsonMarker = JSON.parse(message);
+    		  markerLayer.addLayer(L.marker(jsonMarker.latlng, {icon:myIcon, draggable:'false'}));
+      	}
+      	else if (jsonMessage.type === "mapRequest"){
+      	  var jsonMarkers = JSON.stringify({"type":"markerLayer", "markers": markerLayer})
+      	  con.sendCustomMessage(jsonMarkers);
+      	}
+      	else if (jsonMessage.type === "markerLayer" && !this.isMapUpdated){
+      	  markerLayer = JSON.parse(message).markers;
+      	  this.isMapUpdated = true;
+      	}
+      };
+    },
+
+    initialize: function(channelID){
+      this.super([channelID, {data:true}]);
+      this.mLayer.clearLayers();
+      this.isMapUpdated = false;
+      //var mapRequest = JSON.stringify({"type":"mapRequest"});
+      //this.connection.sendCustomMessage(mapRequest);
+    }
+  });
+  </script>
+</polymer-element>
