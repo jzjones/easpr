@@ -32,6 +32,7 @@ document.addEventListener('polymer-ready', function() {
     var elContainer=new WebRTCContainer();
 
     elContainer.initialize(document.getElementById('roomInput').value,'create');
+    //elContainer.initiate();
     cDiv.appendChild(elContainer);
   }
 
@@ -44,6 +45,7 @@ document.addEventListener('polymer-ready', function() {
 
     var elContainer=new WebRTCContainer();
     elContainer.initialize(document.getElementById('roomInput').value,'join');
+    //elContainer.join();
     cDiv.appendChild(elContainer);
   }
 
