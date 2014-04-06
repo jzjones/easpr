@@ -7,7 +7,7 @@
 
 <polymer-element name="webrtc-container" attributes="name sessionName" extends="webrtc-element" constructor='WebRTCContainer'>
   <template>
-  <button on-click="{{addText}}">Add Text Chat</button>
+  <button on-click="{{addMap}}">Add Map</button>
     <div id='elementDiv'>
         <div id="videoDiv"></div>
         <div id="textDiv"></div>
@@ -26,7 +26,7 @@
         var session = {audio: false, video: false, screen: false, data: false};
     	this.super([channelID, session]);
     	this.addText(attempt);
-    	this.addMap(attempt);
+    	//this.addMap(attempt);
     	this.addVideo(attempt);
     },
     
