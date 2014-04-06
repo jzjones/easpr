@@ -1,5 +1,5 @@
-<link rel="stylesheet" href="leaflet.css" />
-<script src="leaflet.js"></script>
+<link rel="stylesheet" href="../jquery_webrtc/leaflet.css" />
+<script src="../jquery_webrtc/leaflet.js"></script>
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <polymer-element name="map-element" attributes="name sessionName" extends="webrtc-element" constructor="MapElement">
@@ -12,16 +12,22 @@
     
     ready: function(){
       this.super();
-      var mapEl = this.shadowRoot.querySelector("#map");
+      
+    },
+
+    initialize: function(channelID){
+    	this.super([channelID, {data:true}]);
+      this.connection.sessionid = ("map_" + this.connection.channel);
+	var mapEl = this.shadowRoot.querySelector("#map");
       
       var myIcon = L.icon({
-    	    iconUrl: 'polymerElements/images/marker-icon.png',
-    	    iconRetinaUrl: 'polymerElements/images/marker-icon-2x.png',
+    	    iconUrl: 'jquery_webrtc/images/marker-icon.png',
+    	    iconRetinaUrl: 'jquery_webrtc/images/marker-icon-2x.png',
     	    iconSize: [38, 95],
     	    iconAnchor: [22, 94],
     	    popupAnchor: [-3, -76],
-    	    shadowUrl: 'polymerElements/images/marker-shadow.png',
-    	    shadowRetinaUrl: 'polymerElements/images/marker-shadow.png',
+    	    shadowUrl: 'jquery_webrtc/images/marker-shadow.png',
+    	    shadowRetinaUrl: 'jquery_webrtc/images/marker-shadow.png',
     	    shadowSize: [68, 95],
     	    shadowAnchor: [22, 94]
     	});
@@ -44,32 +50,33 @@
 
   	  function onMapClick(e) {
   		  markerLayer.addLayer(L.marker(e.latlng, {icon:myIcon, draggable:'false'}))
-  		  var jsonMarker = JSON.stringify({"type":"marker", "latlng": e.latlng});
-  		  con.sendCustomMessage(jsonMarker);
+  		  //var jsonMarker = JSON.stringify({"type":"marker", "latlng": e.latlng});
+  		  con.send({"type":"marker", "latlng": e.latlng});
+  		  console.log(con);
   	  }
 
   	  map.on('click', onMapClick);
 
-      this.connection.onCustomMessage = function(message){
-      	var jsonMessage = JSON.parse(message);
-
-      	if (jsonMessage.type === "marker"){
-    		  var jsonMarker = JSON.parse(message);
-    		  markerLayer.addLayer(L.marker(jsonMarker.latlng, {icon:myIcon, draggable:'false'}));
+      this.connection.onmessage = function(e){
+    	  //console.log(e.data);
+      	//var jsonMessage = JSON.parse(message);
+		console.log("message received");
+      	if (e.data.type === "marker"){
+    		  //var jsonMarker = JSON.parse(message);
+    		  markerLayer.addLayer(L.marker(e.data.latlng, {icon:myIcon, draggable:'false'}));
       	}
-      	else if (jsonMessage.type === "mapRequest"){
-      	  var jsonMarkers = JSON.stringify({"type":"markerLayer", "markers": markerLayer})
-      	  con.sendCustomMessage(jsonMarkers);
+      	else if (e.data.type === "mapRequest"){
+      	  //var jsonMarkers = JSON.stringify({"type":"markerLayer", "markers": markerLayer})
+      	  con.send({type: "markerLayer", markers: markerLayer});
       	}
-      	else if (jsonMessage.type === "markerLayer" && !this.isMapUpdated){
-      	  markerLayer = JSON.parse(message).markers;
+      	else if (e.data.type === "markerLayer" && !this.isMapUpdated){
+      	  markerLayer = e.data.markers;
+      		  //JSON.parse(message).markers;
       	  this.isMapUpdated = true;
       	}
       };
-    },
-
-    initialize: function(channelID){
-      this.super([channelID, {data:true}]);
+      
+      
       this.mLayer.clearLayers();
       this.isMapUpdated = false;
       //var mapRequest = JSON.stringify({"type":"mapRequest"});

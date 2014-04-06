@@ -18,11 +18,11 @@
     ready: function(){
       this.super();
       var root=this.shadowRoot;
-      this.connection.onCustomMessage = function(message){
+      this.connection.onmessage = function(e){
 
         var mDiv = document.createElement('div');
         var span=document.createElement('span');
-        span.innerHTML=message;
+        span.innerHTML=e.data;
         mDiv.appendChild(span);
         root.querySelector('#viewText').appendChild(mDiv);
       };
@@ -35,8 +35,9 @@
     },
     
     createMessage: function(){
+    	console.log(this.connection);
       var currentMessage=this.shadowRoot.querySelector('#textBox').value;
-      this.connection.sendCustomMessage(currentMessage);
+      this.connection.send(currentMessage);
       var mDiv = document.createElement('div');
       var span=document.createElement('span');
       span.innerHTML=currentMessage;

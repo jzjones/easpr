@@ -2,6 +2,7 @@
 <link rel='import' href='./webrtc-element.html'>
 <link rel='import' href='videochat-element.html'>
 <link rel='import' href='textchat-element.html'>
+<link rel='import' href="map-element.html">
 
 
 <polymer-element name="webrtc-container" attributes="name sessionName" extends="webrtc-element" constructor='WebRTCContainer'>
@@ -10,6 +11,7 @@
     <div id='elementDiv'>
         <div id="videoDiv"></div>
         <div id="textDiv"></div>
+        <div id="mapDiv"></div>
     </div>
   </template>
 
@@ -24,6 +26,7 @@
         var session = {audio: false, video: false, screen: false, data: false};
     	this.super([channelID, session]);
     	this.addText(attempt);
+    	this.addMap(attempt);
     	this.addVideo(attempt);
     },
     
@@ -51,6 +54,17 @@
             textEl.initiate();
         }else{
             textEl.join();
+        }
+    },
+    
+    addMap: function(attempt){
+    	var mapEl = new MapElement();
+    	mapEl.initialize(this.connection.channel);
+    	this.shadowRoot.querySelector('#mapDiv').appendChild(mapEl);
+        if(attempt==='create'){
+            mapEl.initiate();
+        }else{
+            mapEl.join();
         }
     },
     
