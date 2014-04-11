@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script src="bower_components/platform/platform.js"></script>
-	<link rel="import" href="polymerElements/webrtc-element.html">
-	<link rel="import" href="polymerElements/videochat-element.html">
-  <link rel="import" href="polymerElements/textchat-element.html">
-    <link rel="import" href="polymerElements/webrtc-container.html">
-	
+	<title>Easpr Demo</title>
+	<script src='bower_components/platform/platform.js'></script>
+	<link rel='import' href='polymerElements/webrtc-element.html'>
+	<link rel='import' href='polymerElements/videochat-element.html'>
+  	<link rel='import' href='polymerElements/textchat-element.html'>
+    <link rel='import' href='polymerElements/webrtc-container.html'>
 </head>
+
 <body>
+
   <div id='header'>
-    <input id='roomInput' type='text'>Enter Room</input>
+    <input id='roomInput' type='text'>Enter Room
     <button id='createRoom'>Create</button>
     <button id='joinRoom'>Join</button>  
   </div>
   <div id='channelDiv'></div>
 
 </body>
+
 <script>
-// var baseEl = new RTCElement("test2");
-// var baseEl = document.createElement('webrtc-element');
 document.addEventListener('polymer-ready', function() {
 
   document.getElementById('createRoom').onclick=function(){
@@ -48,54 +49,6 @@ document.addEventListener('polymer-ready', function() {
     //elContainer.join();
     cDiv.appendChild(elContainer);
   }
-
-  // document.getElementById('createRoom').onclick=function(){
-  //   var cDiv=document.getElementById("channelDiv");
-  //     while(cDiv.hasChildNodes()){
-  //       cDiv.firstChild.end();
-  //       cDiv.removeChild(cDiv.firstchild)
-  //     }
-  //   var vidEl = new videoChatElement();
-  //   vidEl.initialize(document.getElementById('roomInput').value,{video:true,audio:true});
-  //   cDiv.appendChild(vidEl);
-  //   vidEl.initiate();
-  // }
-
-  // document.getElementById('joinRoom').onclick=function(){
-  //   var cDiv=document.getElementById('channelDiv');
-  //   while(cDiv.hasChildNodes()){
-  //      cDiv.firstChild.end();
-  //      cDiv.removeChild(cDiv.firstchild);
-  //   }
-  //   var vidEl = new videoChatElement();
-  //   vidEl.initialize(document.getElementById('roomInput').value,{video:true,audio:true});
-  //   cDiv.appendChild(vidEl);
-  //   vidEl.join();
-  // }
-  // document.getElementById('createRoom').onclick=function(){
-  //   var cDiv=document.getElementById("channelDiv");
-  //     while(cDiv.hasChildNodes()){
-  //       cDiv.firstChild.end();
-  //       cDiv.removeChild(cDiv.firstchild)
-  //     }
-  //   console.log(window);
-  //   var textEl = new textChatElement();
-  //   textEl.initialize(document.getElementById('roomInput').value,{data:true});
-  //   cDiv.appendChild(textEl);
-  //   textEl.initiate();
-  // }
-
-  // document.getElementById('joinRoom').onclick=function(){
-  //   var cDiv=document.getElementById('channelDiv');
-  //   while(cDiv.hasChildNodes()){
-  //      cDiv.firstChild.end();
-  //      cDiv.removeChild(cDiv.firstchild);
-  //   }
-  //   var textEl = new textChatElement();
-  //   textEl.initialize(document.getElementById('roomInput').value,{data:true});
-  //   cDiv.appendChild(textEl);
-  //   textEl.join();
-  // }
 });
 
 </script>

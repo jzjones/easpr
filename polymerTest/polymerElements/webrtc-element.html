@@ -43,20 +43,11 @@ Polymer('webrtc-element',{
     initiate: function(){
     	var sDescript=this.connection.open(this.connection.sessionid);
     	console.log(this.connection);
-    	//this.connection.connect(this.connection.sessionid);
         this.connection.join(sDescript);
-      	
-        //this.connection.join(sDescript);
     },
 
     join: function(){
-    	//var sDescript=this.connection.open();
       	this.connection.join(this.connection);
-		//this.connection.connect(this.connection.sessionid);
-		//this.connection.join();
-		//this.connection.open();
-	    //this.connection.join();
-	    //console.log(this.connection.channel);
     },
 
     end: function(){
