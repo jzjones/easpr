@@ -1,0 +1,224 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/platform/platform.js">
+
+<link rel='import' href='./webrtc-element.html'>
+<link rel='import' href='./videochat-element.html'>
+<link rel='import' href='./textchat-element.html'>
+<link rel='import' href="./map-element.html">
+
+<link rel='import' href="../bower_components/polymer-ui-collapsible/polymer-ui-collapsible.html">
+<link rel="import" href="../bower_components/polymer-ui-splitter/polymer-ui-splitter.html">
+<link rel="stylesheet" href="../bower_components/polymer-flex-layout/polymer-flex-layout.css">
+<link rel="stylesheet" href="../bower_components/polymer-ui-base-css/base.css">
+
+
+
+
+<polymer-element name="webrtc-container" attributes="name sessionName" extends="webrtc-element" constructor='WebRTCContainer'>
+  <template>
+      <style>
+        body {
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+        
+        .container {
+          width: 1200px;
+          height: 600px;
+          border: 4px solid #aaa;
+        }
+        
+        .container div {
+          overflow: hidden;
+        }
+        
+        #videoDiv {
+          width: 500px;
+          height: 100%;
+        }
+        
+        #box1, #box3, #box5, #box6 {
+          width: 100px;
+        }
+        
+        #box2, #box4 {
+          height: 40px;
+        }
+        
+        polymer-ui-splitter {
+        display: block;
+        width: 10px;
+        background-image: url(http://www.polymer-project.org/components/polymer-ui-splitter/handle.png);
+        background-color: rgb(239, 239, 239);
+        box-shadow: rgb(204, 204, 204) 0px 0px 2px 1px inset;
+        opacity: 0.9;
+        cursor: col-resize;
+        background-position: 50% 50%;
+        background-repeat: no-repeat no-repeat;
+        background-color: rgb(221, 221, 221);
+        }
+        #layout{
+          width:100%;
+          height: 100%;
+        }
+        #menu{
+          width: 250px;
+          height: 100%;
+          top:53px;
+        }
+        #openMenu{
+          height: 100%;
+        }
+        #textDiv{
+          height: 100%;
+          background: #660066;
+        }
+        #flexbox{
+          width: 100%;
+        }
+        #mapDiv{
+          height:100%; 
+          width:100%;
+        }
+        #flex{
+          height:100%;
+        }
+    </style>
+  
+    <div id='layout'>
+    
+      <a id="menuLink" on-click='{{menuHelper}}' class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+      </a>
+    
+      <div id="menu">
+        <div id='openMenu' class="pure-menu pure-menu-open">
+          <div id="textDiv">
+           <!--  <button on-click="{{addMap}}" style='width:100%'>Add Map</button> -->
+          </div>
+
+        </div>
+      </div>
+   
+      <div id='flexbox' class="container flexbox">
+        <div>
+      	   <div id="videoDiv"></div>
+        </div>
+        <polymer-ui-splitter direction="left"></polymer-ui-splitter>
+        <div id='flex' flex>
+      	 <div id="mapDiv"></div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+  Polymer('webrtc-container',{
+       
+    ready: function(){
+      this.super();
+    },
+    
+    initialize: function(channelID){
+      var session = {audio: false, video: false, screen: false, data: true};
+    	this.super([channelID, session]);
+    	this.addText();
+      var btn = document.createElement("button");
+      btn.innerHTML="Add Map";
+      btn.addEventListener('click',this.addMap,false);
+      btn.style.width='100%';
+      this.shadowRoot.querySelector('#textDiv').appendChild(btn);
+    	//this.addMap(attempt);
+    	this.addVideo();
+    },
+    menuHelper: function(){
+      var active = 'active';
+      console.log("here onnoonoon");
+        console.log(this.shadowRoot);
+        
+          this.toggleClass(this.shadowRoot.querySelector("#layout"), active);
+          this.toggleClass(this.shadowRoot.querySelector('#menu'), active);
+          this.toggleClass(this.shadowRoot.querySelector('#menuLink'), active);
+    },
+    
+    addElements: function(attempt, cbObj){
+    	this.addVideo(attempt);
+    	cbObj.addText(attempt);
+    },
+    
+    addVideo: function(){
+    	var vidEl = new VideoChatElement();
+    	vidEl.initialize(this.connection.channel);
+    	this.shadowRoot.querySelector('#videoDiv').appendChild(vidEl);
+      vidEl.findRoom();
+    },
+    
+    addText: function(){
+    	var textEl = new TextChatElement();
+    	textEl.initialize(this.connection.channel);
+    	this.shadowRoot.querySelector('#textDiv').appendChild(textEl);
+      textEl.findRoom();
+    },
+    
+    addMap: function(){
+    	var mapEl = new MapElement();
+      var attempt=this.attempt;
+      console.log('attempt is: '+attempt);
+    	mapEl.initialize(this.connection.channel);
+    	this.shadowRoot.querySelector('#mapDiv').appendChild(mapEl);
+      mapEl.findRoom();
+    },
+    
+    removeVideo: function(){
+    	var vidEl = this.shadowRoot.querySelector('#videoDiv').querySelector("videochat-element");
+    	vidEl.end();
+    	this.shadowRoot.querySelector('#videoDiv').removeChild(vidEl);
+    },
+    
+    removeText: function(){
+    	var textEl = this.$textDiv.querySelector("textchat-element");
+    	textEl.end();
+    	this.$.textDiv.removeChild(textEl);
+    },
+    removeAll: function(){
+
+      var vidEl = this.$.videoDiv.querySelector("videochat-element");
+      var numUsers=vidEl.connection.stats.numberOfConnectedUsers;
+      if(numUsers==0){
+          vidEl.firebase.remove();
+      }
+      vidEl.end();
+      this.$.videoDiv.removeChild(vidEl);
+      var textEl = this.$.textDiv.querySelector("textchat-element");
+      var numUsers=textEl.connection.stats.numberOfConnectedUsers;
+       if(numUsers==0){
+          textEl.firebase.remove();
+      }
+      textEl.end();
+      this.$.textDiv.removeChild(textEl);
+    },
+    toggleClass: function(element, className) {
+        var classes = element.className.split(/\s+/),
+            length = classes.length,
+            i = 0;
+
+        for(; i < length; i++) {
+          if (classes[i] === className) {
+            classes.splice(i, 1);
+            break;
+          }
+        }
+        // The className is not found
+        if (length === classes.length) {
+            classes.push(className);
+        }
+
+        element.className = classes.join(' ');
+    }
+  
+     
+  });
+  </script>
+</polymer-element>

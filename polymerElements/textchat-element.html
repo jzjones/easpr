@@ -1,0 +1,86 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel='import' href='./webrtc-element.html'>
+
+<polymer-element name="textchat-element" attributes="name sessionName" extends="webrtc-element" constructor='TextChatElement'>
+  <template>
+    <style type="text/css">
+    #textDiv{
+      height: 85%;
+      margin: 5px;
+    }
+    #viewText{
+      height: 70%;
+      max-height: 70%
+      overflow: auto;
+      background: #ffffff;
+      color: #000000;
+    }
+    #writeText{
+      margin-top: 10px;
+      width: 100%;
+    }
+    #textBox{
+      width: 100%;
+    }
+    #buttonDiv{
+      width: 100%;
+      margin-top: 10px;
+    }
+    #sendButton{
+      width: 100%;
+    }
+    </style>
+    <div id='textDiv'>
+      <div id='viewText'></div>
+      <div id='writeText'>
+          <textarea id='textBox'></textarea>
+      </div>
+       <div id='buttonDiv'>
+          <button class="pure-button pure-button-primary" id='sendButton' on-click='{{sendText}}'>Send</button>
+      </div>
+    </div>
+  </template>
+
+  <script>
+  Polymer('textchat-element',{
+       
+    ready: function(){
+      this.super();
+      var root=this.shadowRoot;
+      this.connection.onmessage = function(e){
+
+        var mDiv = document.createElement('div');
+        var span=document.createElement('span');
+        span.innerHTML=e.data;
+        mDiv.appendChild(span);
+        root.querySelector('#viewText').appendChild(mDiv);
+      };
+      
+    },
+    
+    initialize: function(channelID){
+      var sessionInfo={data: true};
+      var sessionPrefix="text_";
+
+    	this.super([channelID,sessionInfo]);
+      this.connection.sessionid = (sessionPrefix + this.connection.channel);
+    },
+    
+    createMessage: function(){
+      var currentMessage=this.shadowRoot.querySelector('#textBox').value;
+      this.connection.send(currentMessage);
+
+      var mDiv = document.createElement('div');
+      var span=document.createElement('span');
+
+      span.innerHTML=currentMessage;
+      mDiv.appendChild(span);
+      this.shadowRoot.querySelector('#textBox').value='';
+      return mDiv;
+    },
+    sendText: function(){
+      this.shadowRoot.querySelector('#viewText').appendChild(this.createMessage());
+    }
+  });
+  </script>
+</polymer-element>

@@ -1,0 +1,36 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel='import' href='./webrtc-element.html'>
+
+<polymer-element name="videochat-element" attributes="name sessionName" extends="webrtc-element" constructor='VideoChatElement'>
+  <template>
+    <div id='videoRow'></div>
+  </template>
+
+  <script>
+  Polymer('videochat-element',{
+       
+    ready: function(){
+      this.super();
+      var root=this.shadowRoot;
+
+      this.connection.onstream = function(e){
+      	root.querySelector('#videoRow').appendChild(e.mediaElement); 
+      };
+
+      this.connection.onstreamended = function(e){
+        if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
+      };
+      
+    },
+    
+    initialize: function(channelID){
+      var sessionInfo={video: true, audio: true};
+      var sessionPrefix="video_";
+      
+    	this.super([channelID,sessionInfo]);
+    	this.connection.sessionid = (sessionPrefix+ this.connection.channel);
+    },
+     
+  });
+  </script>
+</polymer-element>
