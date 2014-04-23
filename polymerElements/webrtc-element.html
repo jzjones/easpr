@@ -10,7 +10,7 @@ Polymer('webrtc-element',{
         // global stuff
         this.connection.session = {audio: false, video: false, screen: false, data: false};
 
-        console.log('base connection on ready'+this.connection);
+        console.log('base connection on ready' + this.connection);
     },
     
     initialize: function(channelID, sessionObj){
@@ -40,7 +40,9 @@ Polymer('webrtc-element',{
             var channel = config.channel || this.channel;
             channels[channel] = config.onmessage;
 
-            if (config.onopen) setTimeout(config.onopen, 1000);
+            if (config.onopen) {
+            	setTimeout(config.onopen, 1000);
+            }
 
             return {
 
@@ -57,8 +59,12 @@ Polymer('webrtc-element',{
 
         this.firebase.once('value', function (data) {
         var isRoomPresent = data.val() != null;
-        if (!isRoomPresent) conObj.open(conObj.sessionid);
-        else conObj.join(conObj.sessionid);
+        if (!isRoomPresent) {
+        	conObj.open(conObj.sessionid);
+        }
+        else {
+        	conObj.join(conObj.sessionid);
+        }
 
         console.debug('room is present?', isRoomPresent);
         });

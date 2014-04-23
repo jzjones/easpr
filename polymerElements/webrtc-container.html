@@ -29,21 +29,13 @@
           border: 4px solid #aaa;
         }
         
-        .container div {
+        /*.container div {
           overflow: hidden;
-        }
+        }*/
         
         #videoDiv {
-          width: 500px;
+          width: 100%;
           height: 100%;
-        }
-        
-        #box1, #box3, #box5, #box6 {
-          width: 100px;
-        }
-        
-        #box2, #box4 {
-          height: 40px;
         }
         
         polymer-ui-splitter {
@@ -64,14 +56,14 @@
         }
         #menu{
           width: 250px;
-          height: 100%;
-          top:53px;
+          top:64px;
         }
         #openMenu{
-          height: 100%;
+          height: 98%;
         }
         #textDiv{
-          height: 100%;
+          /*height:93% for including addMap button*/
+          height: 97%;
           background: #660066;
         }
         #flexbox{
@@ -81,8 +73,12 @@
           height:100%; 
           width:100%;
         }
-        #flex{
+        #flex {
           height:100%;
+          overflow-x:hidden;
+        }
+        #no-flex {
+          width:100%;
         }
     </style>
   
@@ -103,7 +99,7 @@
       </div>
    
       <div id='flexbox' class="container flexbox">
-        <div>
+        <div id='no-flex'>
       	   <div id="videoDiv"></div>
         </div>
         <polymer-ui-splitter direction="left"></polymer-ui-splitter>
@@ -123,67 +119,69 @@
     
     initialize: function(channelID){
       var session = {audio: false, video: false, screen: false, data: true};
-    	this.super([channelID, session]);
-    	this.addText();
-      var btn = document.createElement("button");
+      this.super([channelID, session]);
+      this.addText();
+      /*var btn = document.createElement("button");
       btn.innerHTML="Add Map";
-      btn.addEventListener('click',this.addMap,false);
-      btn.style.width='100%';
-      this.shadowRoot.querySelector('#textDiv').appendChild(btn);
-    	//this.addMap(attempt);
-    	this.addVideo();
+      btn.addEventListener('click', this.addMap, false);
+      btn.style.width='93%';
+      btn.style.marginTop = "2.4em";
+      btn.style.marginLeft = "0.5em";
+      btn.className = "pure-button pure-button-primary";
+      this.shadowRoot.querySelector('#textDiv').appendChild(btn);*/
+      this.addVideo();
+      this.mapDiv = this.shadowRoot.querySelector("#mapDiv");
+      this.addMap();
     },
+    
     menuHelper: function(){
       var active = 'active';
-      console.log("here onnoonoon");
-        console.log(this.shadowRoot);
-        
-          this.toggleClass(this.shadowRoot.querySelector("#layout"), active);
-          this.toggleClass(this.shadowRoot.querySelector('#menu'), active);
-          this.toggleClass(this.shadowRoot.querySelector('#menuLink'), active);
+      this.toggleClass(this.shadowRoot.querySelector("#layout"), active);
+      this.toggleClass(this.shadowRoot.querySelector('#menu'), active);
+      this.toggleClass(this.shadowRoot.querySelector('#menuLink'), active);
     },
     
     addElements: function(attempt, cbObj){
-    	this.addVideo(attempt);
-    	cbObj.addText(attempt);
+      this.addVideo(attempt);
+      cbObj.addText(attempt);
     },
     
     addVideo: function(){
-    	var vidEl = new VideoChatElement();
-    	vidEl.initialize(this.connection.channel);
-    	this.shadowRoot.querySelector('#videoDiv').appendChild(vidEl);
+      var vidEl = new VideoChatElement();
+      this.channelData = this.connection.channel;
+      vidEl.initialize(this.connection.channel);
+      this.shadowRoot.querySelector('#videoDiv').appendChild(vidEl);
       vidEl.findRoom();
     },
     
     addText: function(){
-    	var textEl = new TextChatElement();
-    	textEl.initialize(this.connection.channel);
-    	this.shadowRoot.querySelector('#textDiv').appendChild(textEl);
+      var textEl = new TextChatElement();
+      textEl.initialize(this.connection.channel);
+      this.shadowRoot.querySelector('#textDiv').appendChild(textEl);
       textEl.findRoom();
     },
     
     addMap: function(){
-    	var mapEl = new MapElement();
-      var attempt=this.attempt;
-      console.log('attempt is: '+attempt);
-    	mapEl.initialize(this.connection.channel);
-    	this.shadowRoot.querySelector('#mapDiv').appendChild(mapEl);
+      var mapEl = new MapElement();
+      console.log('mapDiv again '+ this.mapDiv);
+      mapEl.initialize(this.channelData);
+      this.mapDiv.appendChild(mapEl);
       mapEl.findRoom();
     },
     
     removeVideo: function(){
-    	var vidEl = this.shadowRoot.querySelector('#videoDiv').querySelector("videochat-element");
-    	vidEl.end();
-    	this.shadowRoot.querySelector('#videoDiv').removeChild(vidEl);
+      var vidEl = this.shadowRoot.querySelector('#videoDiv').querySelector("videochat-element");
+      vidEl.end();
+      this.shadowRoot.querySelector('#videoDiv').removeChild(vidEl);
     },
     
     removeText: function(){
-    	var textEl = this.$textDiv.querySelector("textchat-element");
-    	textEl.end();
-    	this.$.textDiv.removeChild(textEl);
+      var textEl = this.$textDiv.querySelector("textchat-element");
+      textEl.end();
+      this.$.textDiv.removeChild(textEl);
     },
+    
     removeAll: function(){
-
       var vidEl = this.$.videoDiv.querySelector("videochat-element");
       var numUsers=vidEl.connection.stats.numberOfConnectedUsers;
       if(numUsers==0){
@@ -193,29 +191,36 @@
       this.$.videoDiv.removeChild(vidEl);
       var textEl = this.$.textDiv.querySelector("textchat-element");
       var numUsers=textEl.connection.stats.numberOfConnectedUsers;
-       if(numUsers==0){
-          textEl.firebase.remove();
+      if(numUsers==0){
+        textEl.firebase.remove();
       }
       textEl.end();
       this.$.textDiv.removeChild(textEl);
     },
+    
     toggleClass: function(element, className) {
-        var classes = element.className.split(/\s+/),
-            length = classes.length,
-            i = 0;
+      //var flexbox = this.shadowRoot.querySelector("#flexbox");
+      var layoutDiv = this.shadowRoot.querySelector("#layout");
+      var classes = element.className.split(/\s+/),
+        length = classes.length,
+        i = 0;
 
-        for(; i < length; i++) {
-          if (classes[i] === className) {
-            classes.splice(i, 1);
-            break;
-          }
+      for(; i < length; i++) {
+        if (classes[i] === className) {
+          classes.splice(i, 1);
+          //flexbox.style.width = "100%";
+          layout.style.width = "100%";
+          break;
         }
-        // The className is not found
-        if (length === classes.length) {
-            classes.push(className);
-        }
+      }
+      // The className is not found
+      if (length === classes.length) {
+          classes.push(className);
+          //flexbox.style.width = "calc(100% - 250px)";
+          layout.style.width = "calc(100% - 250px)";
+      }
 
-        element.className = classes.join(' ');
+      element.className = classes.join(' ');
     }
   
      

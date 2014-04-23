@@ -18,7 +18,9 @@
       };
 
       this.connection.onstreamended = function(e){
-        if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
+        if(e.mediaElement.parentNode) {
+        	e.mediaElement.parentNode.removeChild(e.mediaElement);
+        }
       };
       
     },

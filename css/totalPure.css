@@ -1,5 +1,6 @@
 body {
     color: #777;
+    background-color: #660066;
     line-height: 1.7em;
     font-size: 13px;
 }
@@ -363,7 +364,7 @@ small screens.
 .menu-link {
     position: fixed;
     display: block; /* show this only on small screens */
-    top: 53px;
+    top: 64px;
     left: 0; /* "#menu width" */
     background: #000;
     background: rgba(0,0,0,0.7);
@@ -436,8 +437,49 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
 }
 
-/*our custom colors*/
+/*our custom CSS*/
 .home-menu .pure-menu-open {
     background: #ffffff;
     height: 3em;
+}
+
+#videoDiv, #videoRow {
+	width:100%;
+}
+
+video {
+	float:left;
+	width:49%;
+	height:auto;
+}
+
+.oddVid {
+	clear: left;
+}
+
+#flexbox {
+	background-color: #ffffff;
+}
+
+#layout {
+	top:1em;
+}
+
+#menu {
+	height: calc(100% - 64px);
+	background-color: #660066;
+}
+
+#mapDiv, #flex {
+	overflow:initial;
+}
+
+#map {
+	width:2500px;
+	height:100%;
+	overflow:hidden;
+}
+
+#header {
+	z-index:1001;
 }
