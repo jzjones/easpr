@@ -1,0 +1,32 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<script src="../libs/firebase.js"></script>
+
+<polymer-element name="session-watcher" attributes="sessionName" constructor='SessionWatcher'>
+  <template>
+    <div id='videoRow'></div>
+  </template>
+
+  <script>
+  Polymer('session-watcher',{
+       
+    ready: function(){
+		console.log(this.sessionName);
+    	var firebaseUrl='https://easpr.firebaseio.com/';
+    	var textPrepend='text_';
+    	var path=textPrepend+this.sessionName;
+    	console.log(path);
+        this.firebase = new Firebase(firebaseUrl);
+        
+        this.firebase.child(path).once('value',function(snapshot){
+        	var exists=(snapshot.val()!==null);
+        	if(exists){
+        		console.log('exists');
+        	}else{
+        		console.log('nope');
+        	}
+        });
+    }
+     
+  });
+  </script>
+</polymer-element>

@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="landing page.">
 
-    <title>Easpr Peer Collaboration</title>
+    <title>~ Easpr ~</title>
 
 
 <link rel="stylesheet" href="./css/pure-min.css">
@@ -19,6 +19,7 @@
 <link rel='import' href='polymerElements/videochat-element.html'>
 <link rel='import' href='polymerElements/textchat-element.html'>
 <link rel='import' href='polymerElements/webrtc-container.html'>
+<link rel='import' href='polymerElements/session-watcher.html'>
 
 <style type="text/css">
 #channelDiv{
@@ -56,13 +57,17 @@
 <div id='channelDiv'></div>
 
 </div>
-
+<div>
+<session-watcher sessionName='hopppppy'></session-watcher>
+</div>
 
 <script>
 var polymerContainer;
 
 document.addEventListener('polymer-ready', function() {
 
+  window.onunload = leaveRoom;
+  window.onbeforeunload = leaveRoom;
   document.getElementById('createRoom').onclick=function(){
     var input=document.getElementById('roomInput');
     if(!input.value)return;
@@ -88,16 +93,20 @@ document.addEventListener('polymer-ready', function() {
 });
 
  function returnToLanding(){
-    var rtcContainer=document.getElementsByTagName("webrtc-container");
-    var parent=document.getElementById("channelDiv");
-        polymerContainer.removeAll();
-        // polymerContainer.end();
-        parent.removeChild(parent.childNodes[0]);
+    	leaveRoom();
         document.getElementById('roomName').innerHTML='';
         document.getElementById('splash').style.visibility='visible';
         document.getElementById("channelDiv").style.visibility='hidden';
 
   }
+ 
+ function leaveRoom(){
+ 		var rtcContainer=document.getElementsByTagName("webrtc-container");
+    	var parent=document.getElementById("channelDiv");
+        polymerContainer.removeAll();
+        // polymerContainer.end();
+        parent.removeChild(parent.childNodes[0]);
+ }
 
 
 // (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -108,5 +117,6 @@ document.addEventListener('polymer-ready', function() {
 // ga('create', 'UA-41480445-1', 'purecss.io');
 // ga('send', 'pageview');
 </script>
+
 </body>
 </html>

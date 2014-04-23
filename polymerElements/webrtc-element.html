@@ -7,6 +7,7 @@
 Polymer('webrtc-element',{
 	ready: function(){
         this.connection = new RTCMultiConnection();
+        this.connection.direction = "many-to-many";
         // global stuff
         this.connection.session = {audio: false, video: false, screen: false, data: false};
 
@@ -31,7 +32,7 @@ Polymer('webrtc-element',{
                 channels[data.channel](data.message);
             };
             
-            snap.ref().remove();
+            //snap.ref().remove();
         });
 
         var firebase=this.firebase;
@@ -48,7 +49,8 @@ Polymer('webrtc-element',{
                     firebase.push({
                         sender: conObj.userid,
                         channel: channel,
-                        message: message
+                        message: message,
+                        active: conObj.stats.numberOfConnectedUsers
                     });
                 },
                 channel: channel
@@ -77,6 +79,7 @@ Polymer('webrtc-element',{
 
     end: function(){
         // if(this.connection.)
+        this.firebase.remove();
         this.connection.leave();
     },
     
