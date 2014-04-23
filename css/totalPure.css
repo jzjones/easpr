@@ -483,3 +483,7 @@ video {
 #header {
 	z-index:1001;
 }
+
+#viewText {
+	overflow:auto;
+}
