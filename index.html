@@ -59,6 +59,13 @@
 
 
 <script>
+window.addEventListener('keyup', function (e) {
+	var visible=(document.getElementById('splash').style.visibility!=='hidden');
+    if (e.keyCode == 13 && visible){
+    	document.getElementById('createRoom').click(); 
+    } 
+}, false);
+
 var polymerContainer;
 
 document.addEventListener('polymer-ready', function() {
@@ -91,19 +98,7 @@ document.addEventListener('polymer-ready', function() {
 
 });
 
- // function returnToLanding(){
- //    var rtcContainer=document.getElementsByTagName("webrtc-container");
- //    var parent=document.getElementById("channelDiv");
- //        polymerContainer.removeAll();
- //        // polymerContainer.end();
- //        parent.removeChild(parent.childNodes[0]);
- //        document.getElementById('roomName').innerHTML='';
- //        document.getElementById('splash').style.visibility='visible';
- //        document.getElementById("channelDiv").style.visibility='hidden';
-
- //  }
-
-   function returnToLanding(){
+ function returnToLanding(){
         leaveRoom();
         document.getElementById('roomName').innerHTML='';
         document.getElementById('splash').style.visibility='visible';

@@ -55,6 +55,12 @@
         mDiv.appendChild(span);
         root.querySelector('#viewText').appendChild(mDiv);
       };
+      root.querySelector('#textBox').addEventListener('keyup', function (e) {
+    	  var message=root.querySelector('#textBox').value;
+    	    if (e.keyCode == 13 && (message!='')){
+    	    	root.querySelector('#sendButton').click(); 
+    	    } 
+    	}, false); 
       
     },
     
