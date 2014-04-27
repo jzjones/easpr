@@ -1562,7 +1562,9 @@
         // if a user leaves
 
         function clearSession(channel) {
+        	
             connection.stats.numberOfConnectedUsers--;
+            
 
             var alert = {
                 left: true,

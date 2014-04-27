@@ -3,7 +3,9 @@
 
 <polymer-element name="session-watcher" attributes="sessionName" constructor='SessionWatcher'>
   <template>
-    <div id='videoRow'></div>
+  	<div>
+  	<span>{{sessionName}}</span><span>{{participants}}</span>
+  	</div>
   </template>
 
   <script>
@@ -11,18 +13,28 @@
        
     ready: function(){
 		console.log(this.sessionName);
+		this.participants = "0";
     	var firebaseUrl='https://easpr.firebaseio.com/';
     	var textPrepend='text_';
     	var path=textPrepend+this.sessionName;
     	console.log(path);
         this.firebase = new Firebase(firebaseUrl);
-        
+        var thisObj = this;
         this.firebase.child(path).once('value',function(snapshot){
         	var exists=(snapshot.val()!==null);
         	if(exists){
-        		console.log('exists');
+        		var max = 0;
+        		for (var key in snapshot.val()){
+        			if(snapshot.val().hasOwnProperty(key)){
+        				if(snapshot.val()[key].active > max){
+        					max = snapshot.val()[key].active;
+        				}
+        			}
+        		}
+        		
+        		thisObj.participants = max + 1;
         	}else{
-        		console.log('nope');
+        		this.participants = "0";
         	}
         });
     }

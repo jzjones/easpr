@@ -38,19 +38,18 @@ Polymer('webrtc-element',{
         var firebase=this.firebase;
         // overriding "openSignalingChannel" method
         this.connection.openSignalingChannel = function (config) {
+        	var con = this;
             var channel = config.channel || this.channel;
             channels[channel] = config.onmessage;
 
             if (config.onopen) setTimeout(config.onopen, 1000);
-
             return {
-
                 send: function (message) {
                     firebase.push({
-                        sender: conObj.userid,
+                        sender: con.userid,
                         channel: channel,
                         message: message,
-                        active: conObj.stats.numberOfConnectedUsers
+                        active: con.stats.numberOfConnectedUsers
                     });
                 },
                 channel: channel
@@ -81,6 +80,7 @@ Polymer('webrtc-element',{
         // if(this.connection.)
         this.firebase.remove();
         this.connection.leave();
+       // this.connection.clearSession();
     },
     
     test: function(){

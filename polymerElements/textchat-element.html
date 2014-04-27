@@ -33,7 +33,7 @@
     <div id='textDiv'>
       <div id='viewText'></div>
       <div id='writeText'>
-          <textarea id='textBox'></textarea>
+          <textarea id='textBox' ></textarea>
       </div>
        <div id='buttonDiv'>
           <button class="pure-button pure-button-primary" id='sendButton' on-click='{{sendText}}'>Send</button>
@@ -46,6 +46,7 @@
        
     ready: function(){
       this.super();
+      
       var root=this.shadowRoot;
       this.connection.onmessage = function(e){
 
@@ -55,6 +56,12 @@
         mDiv.appendChild(span);
         root.querySelector('#viewText').appendChild(mDiv);
       };
+        root.querySelector('#textBox').addEventListener('keyup', function (e) {
+    	  var message=root.querySelector('#textBox').value;
+    	    if (e.keyCode == 13 && (message!='')){
+    	    	root.querySelector('#sendButton').click(); 
+    	    } 
+    	}, false);  
       
     },
     
@@ -69,7 +76,6 @@
     createMessage: function(){
       var currentMessage=this.shadowRoot.querySelector('#textBox').value;
       this.connection.send(currentMessage);
-
       var mDiv = document.createElement('div');
       var span=document.createElement('span');
 
@@ -78,7 +84,15 @@
       this.shadowRoot.querySelector('#textBox').value='';
       return mDiv;
     },
+/*     checkEnter:function(event){
+    	console.log(event);
+    	var message=this.shadowRoot.querySelector('#textBox').value;
+	    if(event.keyCode == 13 && (message!='')){
+	    	this.shadowRoot.querySelector('#sendButton').click(); 
+	    }
+    }, */
     sendText: function(){
+    	
       this.shadowRoot.querySelector('#viewText').appendChild(this.createMessage());
     }
   });

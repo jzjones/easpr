@@ -122,20 +122,21 @@
     },
     
     initialize: function(channelID){
-      var session = {audio: false, video: false, screen: false, data: true};
-    	this.super([channelID, session]);
-    	this.addText();
-      var btn = document.createElement("button");
-      btn.innerHTML="Add Map";
-      btn.addEventListener('click',this.addMap,false);
-      btn.style.width='100%';
-      this.shadowRoot.querySelector('#textDiv').appendChild(btn);
+    	this.channel=channelID;
+      //var session = {audio: false, video: false, screen: false, data: true};
+      //this.super([channelID, session]);
+      this.addText();
+     // var btn = document.createElement("button");
+      //btn.innerHTML="Add Map";
+      //btn.addEventListener('click',this.addMap,false);
+      //btn.style.width='100%';
+      //this.shadowRoot.querySelector('#textDiv').appendChild(btn);
     	//this.addMap(attempt);
-    	this.addVideo();
+      this.addVideo();
     },
     menuHelper: function(){
       var active = 'active';
-      console.log("here onnoonoon");
+      //console.log("here onnoonoon");
         console.log(this.shadowRoot);
         
           this.toggleClass(this.shadowRoot.querySelector("#layout"), active);
@@ -150,14 +151,14 @@
     
     addVideo: function(){
     	var vidEl = new VideoChatElement();
-    	vidEl.initialize(this.connection.channel);
+    	vidEl.initialize(this.channel);
     	this.shadowRoot.querySelector('#videoDiv').appendChild(vidEl);
       vidEl.findRoom();
     },
     
     addText: function(){
     	var textEl = new TextChatElement();
-    	textEl.initialize(this.connection.channel);
+    	textEl.initialize(this.channel);
     	this.shadowRoot.querySelector('#textDiv').appendChild(textEl);
       textEl.findRoom();
     },
