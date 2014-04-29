@@ -229,7 +229,6 @@ This is the parent `<div>` that contains the menu and the content area.
 }
     #layout.active {
         position: relative;
-        left: 250px;
     }
         #layout.active #menu {
             left: 250px;
@@ -420,7 +419,6 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
     #layout {
         padding-left: 250px; /* left col width "#menu" */
-        left: 0;
     }
     #menu {
         left: 150px;
@@ -430,10 +428,6 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         position: fixed;
         left: 250px;
         display: none;
-    }
-
-    #layout.active .menu-link {
-        left: 250px;
     }
 }
 
@@ -450,7 +444,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 video {
 	float:left;
 	width:49%;
-	height:auto;
+	height:calc(49% * 0.75);
 }
 
 .oddVid {
