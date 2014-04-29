@@ -28,7 +28,7 @@
     	    shadowUrl: 'libs/images/marker-shadow.png',
     	    shadowRetinaUrl: 'libs/images/marker-shadow.png',
     	    shadowSize: [41, 41],
-    	    shadowAnchor: [22, 94]
+    	    shadowAnchor: [25, 41]
     	});
 
         var map = L.map(mapEl).setView([51.505, -0.09], 13);
@@ -62,8 +62,8 @@
       	  //var jsonMessage = JSON.parse(message);
 		  console.log("message received");
       	  if (e.data.type === "marker"){
-    		  //var jsonMarker = JSON.parse(message);
-    		  markerLayer.addLayer(L.marker(e.data.latlng, {icon:myIcon, draggable:'false'}));
+    		//var jsonMarker = JSON.parse(message);
+    		markerLayer.addLayer(L.marker(e.data.latlng, {icon:myIcon, draggable:'false'}));
       	  }
       	  else if (e.data.type === "mapRequest"){
       	  //var jsonMarkers = JSON.stringify({"type":"markerLayer", "markers": markerLayer})
@@ -77,7 +77,7 @@
         };
       
       
-        this.mLayer.clearLayers();
+        //this.mLayer.clearLayers();
         this.isMapUpdated = false;
         //var mapRequest = JSON.stringify({"type":"mapRequest"});
         //this.connection.sendCustomMessage(mapRequest);
