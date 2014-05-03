@@ -1,16 +1,13 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <script src="../libs/rtc.js"></script>
 <script src="../libs/firebase.js"></script>
-<polymer-element name="webrtc-element" constructor="baseElement">
+<polymer-element name="webrtc-element">
 <template> </template> 
 <script>
 Polymer('webrtc-element',{
 	ready: function(){
         this.connection = new RTCMultiConnection();
-        // global stuff
         this.connection.session = {audio: false, video: false, screen: false, data: false};
-
-        console.log('base connection on ready' + this.connection);
     },
     
     initialize: function(channelID, sessionObj){
@@ -58,15 +55,15 @@ Polymer('webrtc-element',{
         };
 
         this.firebase.once('value', function (data) {
-        var isRoomPresent = data.val() != null;
-        if (!isRoomPresent) {
-        	conObj.open(conObj.sessionid);
-        }
-        else {
-        	conObj.join(conObj.sessionid);
-        }
-
-        console.debug('room is present?', isRoomPresent);
+	        var isRoomPresent = data.val() != null;
+	        if (!isRoomPresent) {
+	        	conObj.open(conObj.sessionid);
+	        }
+	        else {
+	        	conObj.join(conObj.sessionid);
+	        }
+	
+	        console.debug('room is present?', isRoomPresent);
         });
 
     },
@@ -82,7 +79,6 @@ Polymer('webrtc-element',{
     },
 
     end: function(){
-        // if(this.connection.)
         this.connection.leave();
     },
     

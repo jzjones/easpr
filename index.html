@@ -35,7 +35,7 @@
 
         <ul>
             <li ><span id='roomName'></span></li>
-            <li ><a href='javascript:returnToLanding()'>Home</a></li>
+            <li ><a href="#" id="home">Home</a></li>
             <li><a href="http://www.pixeltwistr.wordpress.com">Blog</a></li>
             <li><a href="http://www.easpr.web.unc.edu">Deliverables</a></li>
         </ul>
@@ -46,7 +46,7 @@
     <div class="splash">
         <input class="splash-head" id='roomInput' type='text' placeholder='Name your room' style="color:black">
         <p class="splash-subhead">
-            Enter your room name and click start to begin!
+            Create or Join a room
         </p>
         <p>
             <button id='createRoom' class="pure-button pure-button-primary">Start</button>
@@ -69,10 +69,12 @@ window.addEventListener('keyup', function (e) {
 var polymerContainer;
 
 document.addEventListener('polymer-ready', function() {
+	
+	
+	
 
-  window.onunload = leaveRoom;
-  window.onbeforeunload = leaveRoom;
   document.getElementById('createRoom').onclick=function(){
+	  
     var input=document.getElementById('roomInput');
     if(!input.value) {
     	return;
@@ -89,30 +91,34 @@ document.addEventListener('polymer-ready', function() {
     polymerContainer=new WebRTCContainer();
 
     polymerContainer.initialize(input.value);
-    console.log(polymerContainer);
-    // polymerContainer.findRoom();
+    polymerContainer.findRoom();
     document.getElementById('roomName').innerHTML=input.value;
     input.value='';
     cDiv.appendChild(polymerContainer);
-  }
-
-});
-
- function returnToLanding(){
+    function returnToLanding(){
         leaveRoom();
         document.getElementById('roomName').innerHTML='';
         document.getElementById('splash').style.visibility='visible';
         document.getElementById("channelDiv").style.visibility='hidden';
 
-  }
- 
- function leaveRoom(){
-        var rtcContainer=document.getElementsByTagName("webrtc-container");
+  	}
+
+  function leaveRoom(){
+        //var rtcContainer=document.getElementsByTagName("webrtc-container");
         var parent=document.getElementById("channelDiv");
-        polymerContainer.removeAll();
-        // polymerContainer.end();
+        polymerContainer.end();
         parent.removeChild(parent.childNodes[0]);
- }
+  }
+    window.onunload = leaveRoom;
+    window.onbeforeunload = leaveRoom;
+    document.getElementById("home").onclick = returnToLanding;
+  }
+  
+
+
+});
+
+
 
 </script>
 </body>
