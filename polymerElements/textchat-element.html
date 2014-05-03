@@ -49,7 +49,6 @@
       this.super();
       var root=this.shadowRoot;
       this.connection.onmessage = function(e){
-
         var mDiv = document.createElement('div');
         var span=document.createElement('span');
         span.innerHTML=e.data;
@@ -68,8 +67,7 @@
     initialize: function(channelID){
       var sessionInfo={data: true};
       var sessionPrefix="text_";
-
-    	this.super([channelID,sessionInfo]);
+      this.super([channelID,sessionInfo]);
       this.connection.sessionid = (sessionPrefix + this.connection.channel);
     },
     
