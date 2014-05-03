@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: webrtc-container.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: webrtc-container.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** 
+ * @author Andy Andrea (andycandrea)
+ * @author Jang Hee I (jhi0417)
+ * @author J. Zach Jones (jzjones)
+ * @author S. Tyler Smith (s-tyler-smith)
+ */
+
+/**
+ * @module webrtc-container
+ * @extends webrtc-element
+ */
+Polymer('webrtc-container',{
+  /**
+   * @lends module:webrtc-container
+   */
+
+  /** 
+   * The Polymer constructor.
+   * Calls superclass (webrtc-element) constructor.
+   * @alias webrtc-container
+   * @memberOf module:webrtc-container
+   */
+     
+  ready: function(){
+    this.super();
+  },
+  
+  /** 
+   * Adds textchat, videochat and map elements to the page
+   * @memberOf module:webrtc-container
+   * @param {string} channelID The ID of the corresponding channel.
+   */
+
+  initialize : function(channelID) {
+    var session = {
+      audio : false,
+      video : false,
+      screen : false,
+      data : true
+    };
+    this.super([channelID, session]);
+    this.connection.sessionid = channelID;
+    this.addText();
+    this.addVideo();
+    this.addMap();
+  },
+  
+  /** 
+   * Slides the textchat window out and dynamically resizes other elements accordingly.
+   * @memberOf module:webrtc-container
+   */
+
+  menuHelper : function() {
+    var active = 'active';
+    this.toggleClass(this.shadowRoot.querySelector("#layout"),
+        active);
+    this.toggleClass(this.shadowRoot.querySelector('#menu'),
+        active);
+    this.toggleClass(
+        this.shadowRoot.querySelector('#menuLink'), active);
+  },
+
+  /** 
+   * Adds videochat element to the container
+   * @memberOf module:webrtc-container
+   */
+  
+  addVideo : function() {
+    this.vidEl = new VideoChatElement();
+    this.vidEl.initialize(this.connection.channel);
+    this.$.videoDiv.appendChild(this.vidEl);
+    this.vidEl.findRoom();
+  },
+  
+  /** 
+   * Adds textchat element to the page
+   * @memberOf module:webrtc-container
+   */
+
+  addText : function() {
+    this.textEl = new TextChatElement();
+    this.textEl.initialize(this.connection.channel);
+    this.$.textDiv.appendChild(this.textEl);
+    this.textEl.findRoom();
+  },
+
+  /** 
+   * Adds map element to the page
+   * @memberOf module:webrtc-container
+   */
+  
+  addMap : function() {
+    this.mapEl = new MapElement();
+    this.mapEl.initialize(this.connection.channel);
+    this.$.mapDiv.appendChild(this.mapEl);
+    this.mapEl.findRoom();
+  },
+  
+  /** 
+   * Closes video connection and removes element from page
+   * @memberOf module:webrtc-container
+   */
+
+  removeVideo : function() {
+    if (this.vidEl) {
+      this.vidEl.end();
+      this.$.videoDiv.removeChild(this.vidEl);
+      delete this.vidEl;
+    }
+  },
+  
+  /** 
+   * Closes textchat connection and removes element from page
+   * @memberOf module:webrtc-container
+   */
+
+  removeText : function() {
+    if(this.textEl){
+      this.textEl.end();
+      this.$.textDiv.removeChild(this.textEl);
+      delete this.textEl;
+    }
+  },
+
+  /** 
+   * Closes map connection and removes element from page
+   * @memberOf module:webrtc-container
+   */
+  removeMap: function(){
+    if(this.mapEl){
+      this.mapEl.end();
+      this.$.mapDiv.removeChild(this.mapEl);
+      delete this.mapEl;
+    }
+  },
+  
+  /** 
+   * Removes video, text and map from page
+   * @memberOf module:webrtc-container
+   */
+
+  removeAll : function() {
+    this.removeVideo();
+    this.removeText();
+    this.removeMap();
+  },
+
+  /** 
+   * Closes video, text and map connections
+   * @memberOf module:webrtc-container
+   */
+
+  end: function(){
+    this.super();
+    this.connection.openSignalingChannel = function(){
+      return;
+    };
+    this.vidEl.connection.openSignalingChannel = function(){
+      return;
+    };
+    if(this.connection.stats.numberOfConnectedUsers == 0){
+      this.disconnect();
+    }
+    this.removeAll();
+  },
+
+  /** 
+   * Forces removal of Firebase data upon empty room
+   * @memberOf module:webrtc-container
+   */
+
+  disconnect: function(){
+    this.vidEl.firebase.remove();
+    this.textEl.firebase.remove();
+    this.mapEl.firebase.remove();
+    this.firebase.remove();
+  },
+  
+  /** 
+   * Adds or removes the given class from an element
+   * @memberOf module:webrtc-container
+   * @param {Object} element The element whose class should be toggled
+   * @param {string} className The name of the class to be toggled
+   */
+
+  toggleClass : function(element, className) {
+    var layoutDiv = this.shadowRoot.querySelector("#layout");
+    var classes = element.className.split(/\s+/), length = classes.length;
+
+    for (i = 0; i &lt; length; i++) {
+      if (classes[i] === className) {
+        classes.splice(i, 1);
+        if (layoutDiv === element) {
+          layout.style.width = "100%";
+        }
+        break;
+      }
+    }
+    // The className is not found
+    if (length === classes.length) {
+      classes.push(className);
+      if (layoutDiv === element) {
+        layout.style.width = "calc(100% - 250px)";
+      }
+    }
+
+    element.className = classes.join(' ');
+  }
+
+});</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-map-element.html">map-element</a></li><li><a href="module-textchat-element.html">textchat-element</a></li><li><a href="module-videochat-element.html">videochat-element</a></li><li><a href="module-webrtc-container.html">webrtc-container</a></li><li><a href="module-webrtc-element.html">webrtc-element</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Fri May 02 2014 22:04:07 GMT-0400 (EDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
