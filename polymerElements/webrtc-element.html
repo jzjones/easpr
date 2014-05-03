@@ -8,6 +8,10 @@ Polymer('webrtc-element',{
 	ready: function(){
         this.connection = new RTCMultiConnection();
         this.connection.session = {audio: false, video: false, screen: false, data: false};
+        if(this.sessionName){
+      	  this.initialize(this.sessionName);
+      	  this.findRoom();
+        }
     },
     
     initialize: function(channelID, sessionObj){
@@ -17,9 +21,9 @@ Polymer('webrtc-element',{
     findRoom: function(){
         var channels = {};
         if(!this.firebaseURL){
-            this.firebaseUrl='https://easpr.firebaseio.com/';
+            this.firebaseURL='https://easpr.firebaseio.com/';
         }
-        this.firebase = new Firebase(this.firebaseUrl+this.connection.sessionid);
+        this.firebase = new Firebase(this.firebaseURL+this.connection.sessionid);
         var conObj=this.connection;
         this.firebase.on('child_added', function(snap) {
             var data = snap.val();
