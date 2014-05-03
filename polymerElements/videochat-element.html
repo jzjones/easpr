@@ -11,7 +11,7 @@
        
     ready: function(){
       this.super();
-      var root=this.$;
+      var root=this.shadowRoot;
 
       this.connection.onstream = function(e){
       	root.querySelector('#videoRow').appendChild(e.mediaElement); 
