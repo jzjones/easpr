@@ -1,7 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <script src="../libs/rtc.js"></script>
 <script src="../libs/firebase.js"></script>
-<polymer-element name="webrtc-element">
+<polymer-element name="webrtc-element" attributes="name sessionName firebaseURL">
 <template> </template> 
 <script>
 Polymer('webrtc-element',{
@@ -16,8 +16,10 @@ Polymer('webrtc-element',{
     },
     findRoom: function(){
         var channels = {};
-        var firebaseUrl='https://easpr.firebaseio.com/';
-        this.firebase = new Firebase(firebaseUrl+this.connection.sessionid);
+        if(!this.firebaseURL){
+            this.firebaseUrl='https://easpr.firebaseio.com/';
+        }
+        this.firebase = new Firebase(this.firebaseUrl+this.connection.sessionid);
         var conObj=this.connection;
         this.firebase.on('child_added', function(snap) {
             var data = snap.val();
