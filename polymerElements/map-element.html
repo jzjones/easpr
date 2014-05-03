@@ -20,6 +20,8 @@
       this.connection.sessionid = ("map_" + this.connection.channel);
 	  var mapEl = this.$.map;
       
+	  
+	  
       var myIcon = L.icon({
     	    iconUrl: 'libs/images/marker-icon.png',
     	    iconRetinaUrl: 'libs/images/marker-icon-2x.png',
@@ -36,8 +38,7 @@
  	    var markerLayer = L.layerGroup([]);
  	    this.mLayer = markerLayer;
  	    markerLayer.addTo(map);
-      
-        this.isMapUpdated = true;
+
  	  
         var TILE_LOCATION = 'http://{s}.tile.cloudmade.com/795f9e9d19094307867649e8d21d3f46/997/256/{z}/{x}/{y}.png';
 	    
@@ -47,7 +48,7 @@
   	    }).addTo(map);
       
   	    var con = this.connection;
-
+		
   	    function onMapClick(e) {
   		  markerLayer.addLayer(L.marker(e.latlng, {icon:myIcon, draggable:'false'}))
   		  con.send({"type":"marker", "latlng": e.latlng});
@@ -68,7 +69,8 @@
       	  }
         };
       
-        this.isMapUpdated = false;
+  	    this.isMapUpdated = false;
+		this.connection.send({type:"mapRequest"});
     }
   });
   </script>
