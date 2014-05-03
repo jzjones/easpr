@@ -1,125 +1,70 @@
-
 <!doctype html>
-<html lang="en">
-<head>
+<html>
+  <head>
     <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="landing page.">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Easpr by jzjones</title>
 
-    <title>Easpr Peer Collaboration</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-
-<link rel="stylesheet" href="./css/pure-min.css">
-<!-- <link rel="stylesheet" href="./css/landingPage.css">
-<link rel="stylesheet" href="./css/side-menu.css"> -->
-<link rel="stylesheet" href="./css/totalPure.css">
-
-<script src='bower_components/platform/platform.js'></script>
-<link rel='import' href='polymerElements/webrtc-element.html'>
-<link rel='import' href='polymerElements/videochat-element.html'>
-<link rel='import' href='polymerElements/textchat-element.html'>
-<link rel='import' href='polymerElements/webrtc-container.html'>
-
-<style type="text/css">
-#channelDiv{
-    margin:1em;
-}
-</style>
-</head>
-
-<body>
-
-<div class="header">
-    <div class="home-menu pure-menu pure-menu-open pure-menu-horizontal pure-menu-fixed">
-        <a class="pure-menu-heading" href="#">Easpr</a>
-
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Easpr</h1>
+        <p>Peering Made Easy</p>
+        <p class="view"><a href="https://github.com/jzjones/easpr">View the Project on GitHub <small>jzjones/easpr</small></a></p>
         <ul>
-            <li ><span id='roomName'></span></li>
-            <li ><a href="#" id="home">Home</a></li>
-            <li><a href="http://www.pixeltwistr.wordpress.com">Blog</a></li>
-            <li><a href="http://www.easpr.web.unc.edu">Deliverables</a></li>
+          <li><a href="https://github.com/jzjones/easpr/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/jzjones/easpr/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/jzjones/easpr">View On <strong>GitHub</strong></a></li>
         </ul>
+      </header>
+      <section>
+        <h1>
+<a name="easpr" class="anchor" href="#easpr"><span class="octicon octicon-link"></span></a>easpr</h1>
+
+<p>Easpr is a project that combines Polymer with WebRTC to create custom collaborative elements. This repository contains the source for the demo site, which can be found <a href="http://cs.unc.edu/%7Essmith96/easpr/index.html">here</a>. Below are descriptions of each of these elements:</p>
+
+<h3>
+<a name="webrtc-element" class="anchor" href="#webrtc-element"><span class="octicon octicon-link"></span></a>webrtc-element</h3>
+
+<p>This is the 'base' element that each of the other elements inherit. As such, each of the other elements are dependent upon it. As it's functionality is primarily "behind the scenes," it should not actually be placed on a page; instead, use one of the other elements that extend it.</p>
+
+<h3>
+<a name="webrtc-container" class="anchor" href="#webrtc-container"><span class="octicon octicon-link"></span></a>webrtc-container</h3>
+
+<p>This element is used to contain each of the functional elements: videochat, textchat and map. Simply including this element within a page will add the functionality of the other elements with a complete layout created using Pure CSS.</p>
+
+<h3>
+<a name="videochat-element" class="anchor" href="#videochat-element"><span class="octicon octicon-link"></span></a>videochat-element</h3>
+
+<p>This element provides conference call functionality via WebRTC and RTC MultiConnection.</p>
+
+<h3>
+<a name="textchat-element" class="anchor" href="#textchat-element"><span class="octicon octicon-link"></span></a>textchat-element</h3>
+
+<p>This element provides peer-to-peer text chat via WebRTC and RTC MultiConnection.</p>
+
+<h3>
+<a name="map-element" class="anchor" href="#map-element"><span class="octicon octicon-link"></span></a>map-element</h3>
+
+<p>This element provides a collaborative map made using Leaflet JS and RTC MultiConnection. Clicking on the map will place a marker that can be seen by others in the session.
+<br><br><br><b>For more information</b>, please view our repository for the elements themselves, which can be found <a href="https://github.com/andycandrea/easpr-elements">here</a>.</p>
+<a href='./docs/'>Link to Docs</a>
+      </section>
     </div>
-</div>
-
-<div class="splash-container" id='splash'>
-    <div class="splash">
-        <input class="splash-head" id='roomInput' type='text' placeholder='Name your room' style="color:black">
-        <p class="splash-subhead">
-            Create or Join a room
-        </p>
-        <p>
-            <button id='createRoom' class="pure-button pure-button-primary">Start</button>
-        </p>
-    </div>
-</div>
-<div id='channelDiv'></div>
-
-</div>
-
-
-<script>
-window.addEventListener('keyup', function (e) {
-	var visible=(document.getElementById('splash').style.visibility!=='hidden');
-    if (e.keyCode == 13 && visible){
-    	document.getElementById('createRoom').click(); 
-    } 
-}, false);
-
-var polymerContainer;
-
-document.addEventListener('polymer-ready', function() {
-	
-	
-	
-
-  document.getElementById('createRoom').onclick=function(){
-	  
-    var input=document.getElementById('roomInput');
-    if(!input.value) {
-    	return;
-    }
-    document.getElementById('splash').style.visibility='hidden';
-
-    var cDiv=document.getElementById("channelDiv");
-    cDiv.style.visibility='visible';
-    while(cDiv.hasChildNodes()){
-       cDiv.firstChild.end();
-       cDiv.removeChild(cDiv.firstchild)
-    }
-
-    polymerContainer=new WebRTCContainer();
-
-    polymerContainer.initialize(input.value);
-    polymerContainer.findRoom();
-    document.getElementById('roomName').innerHTML=input.value;
-    input.value='';
-    cDiv.appendChild(polymerContainer);
-    function returnToLanding(){
-        leaveRoom();
-        document.getElementById('roomName').innerHTML='';
-        document.getElementById('splash').style.visibility='visible';
-        document.getElementById("channelDiv").style.visibility='hidden';
-
-  	}
-
-  function leaveRoom(){
-        //var rtcContainer=document.getElementsByTagName("webrtc-container");
-        var parent=document.getElementById("channelDiv");
-        polymerContainer.end();
-        parent.removeChild(parent.childNodes[0]);
-  }
-    window.onunload = leaveRoom;
-    window.onbeforeunload = leaveRoom;
-    document.getElementById("home").onclick = returnToLanding;
-  }
-  
-
-
-});
-
-
-
-</script>
-</body>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/jzjones">jzjones</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
 </html>
