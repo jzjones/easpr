@@ -61,15 +61,19 @@ Polymer('webrtc-element',{
         };
 
         this.firebase.once('value', function (data) {
-	        var isRoomPresent = data.val() != null;
-	        if (!isRoomPresent) {
-	        	conObj.open(conObj.sessionid);
-	        }
-	        else {
-	        	conObj.join(conObj.sessionid);
-	        }
-	
-	        console.debug('room is present?', isRoomPresent);
+            var isRoomPresent = data.val() != null;
+            if (!isRoomPresent) {
+              var sDescription = conObj.open({
+                    dontTransmit: false,
+                    sessionid: conObj.sessionid
+                });
+                firebase.push( sDescription  );
+            } else {
+                var sDescription = data.val();
+                conObj.join(sDescription);
+            }
+
+            console.debug('room is present?', isRoomPresent);
         });
 
     },
